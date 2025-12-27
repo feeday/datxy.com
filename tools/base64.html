@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线 Base64 编码/解码工具 - Datxy</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../index.html" class="logo">Datxy</a>
+        <div class="nav-links"><a href="../index.html">返回首页</a></div>
+    </nav>
+
+    <div class="container">
+        <h2>Base64 转换工具</h2>
+        
+        <div class="tool-box">
+            <h3 style="margin-bottom: 15px; color: var(--accent-color);">🅰️ 文本 ⇌ Base64</h3>
+            <textarea id="textInput" rows="5" placeholder="在此输入要处理的文本（支持中文）..."></textarea>
+            
+            <div class="tool-controls">
+                <button onclick="textToB64()">⬇️ 编码 (Encode)</button>
+                <button class="secondary" onclick="b64ToText()">⬆️ 解码 (Decode)</button>
+                <button class="secondary" onclick="document.getElementById('textInput').value=''">🗑️ 清空输入</button>
+            </div>
+
+            <textarea id="textOutput" rows="5" placeholder="转换结果..." readonly></textarea>
+        </div>
+
+        <div class="tool-box">
+            <h3 style="margin-bottom: 15px; color: var(--accent-color);">🖼️ 图片 ➡️ Base64</h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px;">将图片转换为 DataURI 格式 (适合 CSS/HTML 内嵌小图标)</p>
+            
+            <div style="border: 2px dashed var(--border-color); padding: 20px; text-align: center; border-radius: 8px;">
+                <input type="file" id="imgInput" accept="image/*" style="display: none;" onchange="handleImage(this)">
+                <button onclick="document.getElementById('imgInput').click()">📁 选择图片文件</button>
+                <span id="fileName" style="margin-left: 10px; font-size: 0.9rem; color: var(--text-secondary);"></span>
+            </div>
+
+            <textarea id="imgOutput" rows="5" placeholder="data:image/png;base64,..." style="margin-top: 15px;" onclick="this.select()"></textarea>
+            
+            <div id="imgPreview" style="margin-top: 15px; text-align: center; display: none;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">预览：</p>
+                <img id="previewObj" style="max-width: 100%; max-height: 200px; border: 1px solid var(--border-color); border-radius: 4px;">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 文本转换逻辑 (支持 UTF-8 中文) ---
+        function textToB64() {
+            const input = document.getElementById('textInput').value;
+            if(!input) return;
+            try {
+                // 使用 encodeURIComponent 处理中文，避免 btoa 报错
+                const b64 = btoa(unescape(encodeURIComponent(input)));
+                document.getElementById('textOutput').value = b64;
+            } catch (e) {
+                alert("编码失败：" + e.message);
+            }
+        }
+
+        function b64ToText() {
+            const input = document.getElementById('textInput').value.trim();
+            if(!input) return;
+            try {
+                // 对应上面的解码过程
+                const text = decodeURIComponent(escape(atob(input)));
+                document.getElementById('textOutput').value = text;
+            } catch (e) {
+                document.getElementById('textOutput').value = "❌ 无效的 Base64 字符串";
+            }
+        }
+
+        // --- 图片转换逻辑 ---
+        function handleImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            document.getElementById('fileName').innerText = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const result = e.target.result;
+                // 输出代码
+                document.getElementById('imgOutput').value = result;
+                // 显示预览
+                const preview = document.getElementById('previewObj');
+                preview.src = result;
+                document.getElementById('imgPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
