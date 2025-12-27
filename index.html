@@ -1,1 +1,208 @@
-i
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datxy - 开发者在线工具箱 | 数据处理与格式转换</title>
+    <meta name="description" content="Datxy 提供免费、快速、安全的在线工具集。包括 JSON 格式化、Base64 编码解码、正则测试、时间戳转换等，所有处理均在本地浏览器完成，保护您的数据隐私。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 核心 CSS 样式 */
+        :root {
+            --bg-color: #0f172a; /* 深蓝背景 */
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #38bdf8; /* 科技蓝强调色 */
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* Hero 区域：首屏印象 */
+        .hero {
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+            background-image: radial-gradient(circle at top center, #1e293b 0%, #0f172a 70%);
+            /* 这里可以加一个微妙的 SVG 网格背景图增加科技感 */
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--text-primary), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* 主要内容容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 工具网格布局 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: -3rem; /* 让卡片稍微重叠到 Hero 区域 */
+        }
+
+        /* 工具卡片样式 */
+        .tool-card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--card-hover);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.3);
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .tool-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 特性介绍区域 */
+        .features {
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        .features h2 { margin-bottom: 3rem; }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .feature-item h4 { margin: 1rem 0 0.5rem; color: var(--accent-color);}
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid #1e293b;
+        }
+        footer a { color: var(--accent-color); }
+        footer a:hover { text-decoration: underline; }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .tools-grid { margin-top: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>Datxy 开发工具箱</h1>
+        <p>快速、安全、无需后端的在线工具集。专为开发者和数据处理设计。</p>
+    </header>
+
+    <main class="container">
+        <section class="tools-grid">
+            
+            <a href="/tools/json-formatter.html" class="tool-card">
+                <div class="tool-icon">Is}</div> <h3>JSON 格式化</h3>
+                <p>在线验证、美化打印和压缩 JSON 数据，支持错误定位。</p>
+            </a>
+
+            <a href="/tools/base64.html" class="tool-card">
+                <div class="tool-icon">B64</div>
+                <h3>Base64 转换</h3>
+                <p>快速对文本或文件进行 Base64 编码和解码操作。</p>
+            </a>
+
+            <a href="/tools/regex-tester.html" class="tool-card">
+                <div class="tool-icon">.*</div>
+                <h3>正则测试器</h3>
+                <p>实时编写和测试正则表达式，支持多种匹配模式。</p>
+            </a>
+
+             <a href="/tools/timestamp.html" class="tool-card">
+                <div class="tool-icon">⏰</div>
+                <h3>时间戳转换</h3>
+                <p>Unix 时间戳与日期时间格式的相互转换工具。</p>
+            </a>
+
+             <div class="tool-card" style="opacity: 0.7; cursor: default;">
+                <div class="tool-icon">🚀</div>
+                <h3>更多工具开发中...</h3>
+                <p>敬请期待图片处理、加解密等更多功能。</p>
+            </div>
+
+        </section>
+
+        <section class="features">
+            <h2>为什么选择 Datxy?</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h4>🔒 隐私安全</h4>
+                    <p>所有计算均在您的浏览器本地完成，数据无需上传至服务器。</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⚡ 极速响应</h4>
+                    <p>基于静态页面技术，加载瞬间完成，无需等待后台处理。</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📱 多端适配</h4>
+                    <p>完美支持桌面端和移动端访问，随时随地使用。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Datxy.com. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+            Developed & Maintained by <a href="https://datxy.com" target="_blank">datxy</a>
+        </p>
+    </footer>
+
+</body>
+</html>
