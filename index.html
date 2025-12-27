@@ -3,252 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多模态 在线工具 数据 导航</title>
+    <title>多模态 AI 导航 & 在线工具箱</title>
     <meta name="description" content="收录全球优质的图像、视频、音频、文本及多模态 AI 数据集与在线工具。">
-    <link rel="stylesheet" href="css/style.css">
     
     <style>
-        /* ================== 核心变量与重置 ================== */
+        /* ================== 核心变量 ================== */
         :root {
-            --bg-color: #0f172a;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #38bdf8;
-            --card-bg: #1e293b;
-            --border-color: #334155;
+            --bg-dark: #020617; /* 更深邃的背景 */
+            --bg-card: #0f172a;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.5);
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(15, 23, 42, 0.6);
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-        /* ================== 导航栏 (Logo 美化版) ================== */
+        /* ================== 顶部导航栏 (极简透明) ================== */
         .navbar {
-            padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 1.2rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
+            position: absolute; /* 悬浮在背景之上 */
+            top: 0; left: 0; right: 0;
             z-index: 100;
         }
 
-        /* ✨ 极客风 Logo */
+        /* ✨ Logo 美化: 现代极简 + 科技点缀 */
         .logo { 
-            font-size: 1.8rem; 
-            font-weight: 800; 
-            font-family: 'Courier New', Courier, monospace;
-            letter-spacing: -1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 10px; 
+            font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px;
+            color: #fff;
         }
-        
-        .logo-text {
-            background: linear-gradient(to right, #fff 30%, var(--accent-color) 100%);
+        .logo span {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        .logo::before {
+            content: ''; display: block; width: 8px; height: 8px;
+            background: var(--accent); border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent);
         }
 
-        .logo-dot {
-            width: 8px; height: 8px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-color);
-            animation: pulse 2s infinite;
+        .nav-links a { 
+            font-size: 0.9rem; color: var(--text-sub); font-weight: 500; 
+            padding: 8px 16px; border-radius: 20px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+
+        /* ================== Hero 区域 (首屏视觉中心) ================== */
+        .hero-section {
+            position: relative;
+            text-align: center;
+            padding: 8rem 1rem 4rem;
+            /* 动态背景光效 */
+            background: 
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%);
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
+        .hero-title {
+            font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(to bottom, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .nav-links a { margin-left: 20px; color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
-        .nav-links a:hover { color: var(--accent-color); }
-
-        /* ================== 头部搜索区 ================== */
-        .search-section { 
-            text-align: center; 
-            padding: 5rem 1rem 4rem; 
-            background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 70%); 
+        .hero-desc {
+            color: var(--text-sub); margin-bottom: 3rem; max-width: 600px; 
+            margin-left: auto; margin-right: auto; font-size: 1.1rem;
         }
-        
-        .search-box { max-width: 600px; margin: 0 auto; position: relative; }
-        
+
+        /* 搜索框美化 */
+        .search-container {
+            position: relative; max-width: 640px; margin: 0 auto;
+        }
         .search-input {
-            width: 100%; padding: 16px 30px; border-radius: 50px; 
-            border: 2px solid var(--border-color);
-            background: rgba(255,255,255,0.03); 
-            color: #fff; font-size: 1.1rem; 
+            width: 100%; padding: 18px 30px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            color: #fff; font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            border-color: var(--accent);
+            background: rgba(0,0,0,0.3);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+            transform: scale(1.01);
+        }
+        .search-icon {
+            position: absolute; right: 25px; top: 50%; transform: translateY(-50%);
+            color: var(--text-sub); pointer-events: none;
+        }
+
+        /* 过滤器美化 */
+        .filter-tags { 
+            display: flex; justify-content: center; gap: 10px; 
+            margin-top: 40px; flex-wrap: wrap; 
+        }
+        .tag-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            padding: 8px 20px; border-radius: 50px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
             transition: all 0.3s;
         }
-        .search-input:focus { 
-            border-color: var(--accent-color); 
-            background: rgba(0,0,0,0.2); 
-            outline: none; 
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
-        }
-        
-        /* ================== 过滤器 (磨砂玻璃版) ================== */
-        .filter-tags { 
-            display: flex; justify-content: center; gap: 12px; 
-            margin-top: 35px; flex-wrap: wrap; 
-        }
-
-        .tag-btn {
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(10px); 
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-secondary);
-            padding: 10px 24px; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-size: 0.95rem; 
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; align-items: center; gap: 6px;
-        }
-
-        .tag-btn:hover { 
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: #fff;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
+        .tag-btn:hover { background: rgba(255,255,255,0.08); color: #fff; transform: translateY(-2px); }
         .tag-btn.active { 
-            background: var(--accent-color); 
-            color: #000; 
-            border-color: var(--accent-color); 
-            font-weight: 700;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-            transform: scale(1.05);
+            background: var(--accent); color: #000; border-color: var(--accent); 
+            font-weight: 700; box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* ================== 网格布局 (宽屏优化) ================== */
-        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        /* ================== 内容网格 (响应式) ================== */
+        .container { max-width: 1440px; margin: 0 auto; padding: 2rem; }
 
         .resource-grid { 
-            display: grid; gap: 25px; padding: 20px 0;
-            grid-template-columns: 1fr; /* 手机 1列 */
+            display: grid; gap: 24px; padding-bottom: 4rem;
+            grid-template-columns: 1fr; 
         }
-        @media (min-width: 768px) { .resource-grid { grid-template-columns: repeat(2, 1fr); } } /* 平板 2列 */
-        @media (min-width: 1024px) { .resource-grid { grid-template-columns: repeat(3, 1fr); } } /* 笔记本 3列 */
-        @media (min-width: 1400px) { .resource-grid { grid-template-columns: repeat(4, 1fr); } } /* 大屏 4列 */
+        /* 响应式断点 */
+        @media (min-width: 768px) { .resource-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .resource-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1400px) { .resource-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        /* ================== 卡片样式 ================== */
+        /* 卡片设计升级 */
         .res-card {
-            background: var(--card-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 16px; 
-            padding: 25px;
-            transition: 0.3s; 
-            display: flex; flex-direction: column; 
-            height: 100%; position: relative;
-        }
-        .res-card:hover { 
-            transform: translateY(-5px); 
-            border-color: var(--accent-color); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex; flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
         }
         
-        .res-top { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .res-badge { 
-            font-size: 0.7rem; padding: 4px 12px; border-radius: 20px; 
-            color: #fff; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; 
+        /* 悬停微动效 */
+        .res-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        
-        /* 标签颜色 */
-        .badge-tool { background: linear-gradient(135deg, #10b981, #059669); }
-        .badge-data { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-        .badge-ai   { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .res-card:hover .res-title { color: var(--accent); }
 
-        .res-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
-        .res-desc { font-size: 0.9rem; color: var(--text-secondary); flex-grow: 1; margin-bottom: 20px; line-height: 1.6; }
+        .res-top { display: flex; justify-content: space-between; margin-bottom: 16px; }
         
-        .res-link { 
-            text-align: center; display: block; width: 100%; padding: 12px 0; border-radius: 8px; 
-            background: rgba(255,255,255,0.05); color: var(--text-primary); font-weight: 600; 
-            margin-top: auto; border: 1px solid transparent; 
+        .badge {
+            font-size: 0.7rem; padding: 4px 10px; border-radius: 6px;
+            font-weight: 700; letter-spacing: 0.5px;
         }
-        .res-link:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(56, 189, 248, 0.05); }
-        .mini-tag { position: absolute; top: 25px; right: 25px; font-size: 0.75rem; color: #64748b; font-family: monospace; opacity: 0.7; }
+        .b-tool { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .b-data { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .b-ai { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.2); }
 
-        /* ================== 右下角悬浮按钮 ================== */
+        .res-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: #fff; transition: 0.3s;}
+        .res-desc { font-size: 0.9rem; color: var(--text-sub); flex-grow: 1; margin-bottom: 20px; line-height: 1.6; }
+
+        .res-link {
+            text-align: center; padding: 12px; border-radius: 10px;
+            background: rgba(255,255,255,0.03); color: var(--text-main); font-weight: 600; font-size: 0.9rem;
+            border: 1px solid transparent; transition: 0.3s;
+        }
+        .res-link:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); color: var(--accent); }
+
+        /* ================== 悬浮按钮组 (带滚动逻辑) ================== */
         .fab-container {
-            position: fixed; bottom: 30px; right: 30px; 
-            display: flex; flex-direction: column; gap: 15px; z-index: 999;
+            position: fixed; bottom: 40px; right: 40px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 99;
+            /* 关键：默认隐藏 */
+            opacity: 0; 
+            transform: translateY(20px);
+            pointer-events: none; /* 隐藏时不可点击 */
+            transition: all 0.4s ease;
         }
+
+        /* 激活状态 (JS控制) */
+        .fab-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
         .fab-btn {
-            width: 50px; height: 50px; border-radius: 50%; border: none; 
-            background: var(--accent-color); color: #000;
-            font-size: 1.2rem; cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); 
-            transition: 0.3s;
+            width: 50px; height: 50px; border-radius: 50%; border: none;
+            background: var(--accent); color: #000;
+            font-size: 1.2rem; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
             display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
         }
         .fab-btn:hover { transform: scale(1.1); background: #fff; }
-        .fab-btn.secondary { 
-            background: rgba(30, 41, 59, 0.8); 
-            backdrop-filter: blur(5px);
-            color: var(--text-primary); 
-            border: 1px solid var(--border-color); 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
         
-        /* 移动端调整 */
+        .fab-btn.secondary {
+            background: rgba(15, 23, 42, 0.8); color: #fff;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center; padding: 4rem 2rem; 
+            color: var(--text-sub); border-top: 1px solid var(--border);
+        }
+
         @media (max-width: 768px) {
-            .logo { font-size: 1.5rem; }
-            .search-section { padding: 4rem 1rem 3rem; }
+            .hero-title { font-size: 2rem; }
             .fab-container { bottom: 20px; right: 20px; }
-            .fab-btn { width: 45px; height: 45px; }
         }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="/" class="logo">
-            <div class="logo-dot"></div>
-            <span class="logo-text">Datxy</span>
-        </a>
+        <a href="/" class="logo"><span>Datxy</span></a>
         <div class="nav-links">
             <a href="https://github.com/feeday/datxy.com" target="_blank">GitHub</a>
         </div>
     </nav>
 
-    <header class="search-section" id="topHeader">
-        <h1 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 800;">多模态 AI 与数据工具</h1>
-        <p style="color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-            一站式开发者导航：集成在线处理工具、图像/视频/音频数据集及前沿 AI 模型。
-        </p>
+    <header class="hero-section" id="topHeader">
+        <h1 class="hero-title">多模态 AI 与数据工具</h1>
+        <p class="hero-desc">一站式开发者导航：集成在线处理工具、图像/视频/音频数据集及前沿 AI 模型。</p>
         
-        <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜索资源 (例如: JSON, Sora, GPT-4)...">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索资源 (例如: JSON, Sora, GPT-4)...">
+            <div class="search-icon">🔍</div>
         </div>
 
         <div class="filter-tags" id="filterContainer">
-            <button class="tag-btn active" onclick="filterData('all')">♾️ 全部</button>
-            <button class="tag-btn" onclick="filterData('tool')">🛠️ 在线工具</button>
-            <button class="tag-btn" onclick="filterData('image')">🖼️ 图像</button>
-            <button class="tag-btn" onclick="filterData('video')">🎬 视频</button>
-            <button class="tag-btn" onclick="filterData('audio')">🎵 音频</button>
-            <button class="tag-btn" onclick="filterData('text')">📝 文本</button>
-            <button class="tag-btn" onclick="filterData('multi')">🧠 多模态</button>
+            <button class="tag-btn active" onclick="filterData('all')">全部</button>
+            <button class="tag-btn" onclick="filterData('tool')">在线工具</button>
+            <button class="tag-btn" onclick="filterData('image')">图像</button>
+            <button class="tag-btn" onclick="filterData('video')">视频</button>
+            <button class="tag-btn" onclick="filterData('audio')">音频</button>
+            <button class="tag-btn" onclick="filterData('text')">文本</button>
+            <button class="tag-btn" onclick="filterData('multi')">多模态</button>
         </div>
     </header>
 
@@ -257,54 +266,38 @@
             </div>
     </main>
 
-    <div class="fab-container">
+    <div class="fab-container" id="fabContainer">
         <button class="fab-btn" onclick="jumpToSearch()" title="搜索">🔍</button>
-        <button class="fab-btn secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="回到顶部">⬆️</button>
+        <button class="fab-btn secondary" onclick="scrollToTop()" title="回到顶部">⬆️</button>
     </div>
 
-    <footer style="text-align: center; padding: 4rem 2rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); margin-top: 3rem;">
-        <p style="font-weight: 600; color: var(--text-primary);">© 2025 Datxy.com</p>
-        <p style="font-size: 0.85rem; margin-top: 10px;">
-            Designed & Developed by <a href="https://cpuck.com" target="_blank" style="color: var(--accent-color); text-decoration: none;">Cpuck</a>
-        </p>
+    <footer>
+        <p>© 2025 Datxy.com</p>
+        <p style="font-size: 0.85rem; margin-top: 10px;">Designed by Cpuck</p>
     </footer>
 
     <script>
-        // === 资源数据库配置 ===
-        // category: 对应过滤器 (tool, image, video, audio, text, multi)
-        // type: 决定标签颜色 (tool=绿色, data=蓝色, ai=紫色)
-        
+        // === 资源数据 ===
         const resources = [
-            // --- 在线工具 (tool) ---
             { category: 'tool', type: 'tool', title: 'JSON 格式化', desc: '纯本地处理：校验、美化和压缩 JSON 数据，支持错误定位。', url: 'tools/json.html' },
             { category: 'tool', type: 'tool', title: '文本编码转换', desc: '开发调试必备：URL Decode、Unicode、Hex、Base64 互转。', url: 'tools/text-encoding.html' },
             { category: 'tool', type: 'tool', title: '时间戳转换', desc: 'Unix 时间戳与日期时间相互转换，精确到毫秒。', url: 'tools/timestamp.html' },
             { category: 'tool', type: 'tool', title: '图片格式转换', desc: 'JPG / PNG / WebP 格式互转，浏览器本地渲染，保护隐私。', url: 'tools/image-convert.html' },
             { category: 'tool', type: 'tool', title: 'Base64 图片编码', desc: '将图片转换为 Base64 代码，或将代码还原为图片。', url: 'tools/base64.html' },
-
-            // --- 文本类 (text) ---
             { category: 'text', type: 'data', title: 'Hugging Face NLP', desc: '全球最大的自然语言处理数据集中心，涵盖数千种语言任务。', url: 'https://huggingface.co/datasets' },
             { category: 'text', type: 'data', title: 'Common Crawl', desc: '开放式网络抓取数据库，是大语言模型预训练的核心数据源。', url: 'https://commoncrawl.org/' },
-
-            // --- 图像类 (image) ---
             { category: 'image', type: 'ai', title: 'Midjourney', desc: '目前艺术性最强、细节最丰富的 AI 图像生成工具。', url: 'https://www.midjourney.com/' },
             { category: 'image', type: 'data', title: 'ImageNet', desc: '计算机视觉领域的"Hello World"，包含 1400 万张标注图片。', url: 'https://www.image-net.org/' },
             { category: 'image', type: 'data', title: 'LAION-5B', desc: '拥有 50 亿图文对的超大规模数据集，Stable Diffusion 训练基石。', url: 'https://laion.ai/' },
-
-            // --- 视频类 (video) ---
             { category: 'video', type: 'ai', title: 'Sora (OpenAI)', desc: 'OpenAI 发布的文生视频模型，能够生成长达一分钟的高清视频。', url: 'https://openai.com/sora' },
             { category: 'video', type: 'ai', title: 'Runway Gen-2', desc: '专业的 AI 视频生成与编辑工具，支持笔刷控制和动态运镜。', url: 'https://runwayml.com/' },
-
-            // --- 音频类 (audio) ---
             { category: 'audio', type: 'ai', title: 'Suno AI', desc: '能够生成广播级音质歌曲的 AI 音乐生成器，支持人声演唱。', url: 'https://suno.com/' },
             { category: 'audio', type: 'ai', title: 'ElevenLabs', desc: '目前最自然的 AI 语音合成 (TTS)，支持多语言情感克隆。', url: 'https://elevenlabs.io/' },
-
-            // --- 多模态 (multi) ---
             { category: 'multi', type: 'ai', title: 'ChatGPT (GPT-4)', desc: '最强多模态助手，支持文本、代码、图片识别与 DALL·E 3 绘图。', url: 'https://chat.openai.com/' },
             { category: 'multi', type: 'ai', title: 'Google Gemini', desc: 'Google 原生多模态大模型，在视频理解和长文本分析上表现优异。', url: 'https://gemini.google.com/' }
         ];
 
-        // --- 核心渲染逻辑 ---
+        // === 渲染逻辑 ===
         const grid = document.getElementById('contentGrid');
         const searchInput = document.getElementById('searchInput');
 
@@ -314,19 +307,17 @@
                 const card = document.createElement('div');
                 card.className = 'res-card';
                 
-                // 标签样式逻辑
-                let badgeClass = 'badge-tool';
+                let badgeClass = 'b-tool';
                 let badgeText = 'TOOL';
-                if(item.type === 'data') { badgeClass = 'badge-data'; badgeText = 'DATA'; }
-                if(item.type === 'ai') { badgeClass = 'badge-ai'; badgeText = 'AI'; }
+                if(item.type === 'data') { badgeClass = 'b-data'; badgeText = 'DATA'; }
+                if(item.type === 'ai') { badgeClass = 'b-ai'; badgeText = 'AI MODEL'; }
 
                 const btnText = item.type === 'tool' ? '立即使用' : '访问官网';
                 const target = item.type === 'tool' ? '_self' : '_blank';
                 
                 card.innerHTML = `
                     <div class="res-top">
-                        <span class="res-badge ${badgeClass}">${badgeText}</span>
-                        <span class="mini-tag">#${item.category.toUpperCase()}</span>
+                        <span class="badge ${badgeClass}">${badgeText}</span>
                     </div>
                     <a href="${item.url}" target="${target}" class="res-title">${item.title}</a>
                     <p class="res-desc">${item.desc}</p>
@@ -336,40 +327,39 @@
             });
         }
 
-        // 初始化
         render(resources);
 
-        // 过滤功能
+        // === 过滤与搜索 ===
         function filterData(cat) {
             document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-
-            if(cat === 'all') {
-                render(resources);
-            } else {
-                const filtered = resources.filter(item => item.category === cat);
-                render(filtered);
-            }
+            render(cat === 'all' ? resources : resources.filter(item => item.category === cat));
         }
 
-        // 搜索功能
         searchInput.addEventListener('input', (e) => {
-            const keyword = e.target.value.toLowerCase();
-            const filtered = resources.filter(item => 
-                item.title.toLowerCase().includes(keyword) || 
-                item.desc.toLowerCase().includes(keyword) ||
-                item.category.toLowerCase().includes(keyword)
-            );
-            render(filtered);
+            const k = e.target.value.toLowerCase();
+            render(resources.filter(item => item.title.toLowerCase().includes(k) || item.desc.toLowerCase().includes(k) || item.category.includes(k)));
         });
 
-        // 悬浮按钮功能：平滑滚动并聚焦
+        // === 关键逻辑：滚动显示悬浮按钮 ===
+        const fab = document.getElementById('fabContainer');
+        
+        window.addEventListener('scroll', () => {
+            // 当滚动超过 300px 时显示按钮
+            if (window.scrollY > 300) {
+                fab.classList.add('visible');
+            } else {
+                fab.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
         function jumpToSearch() {
-            const header = document.getElementById('topHeader');
-            header.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-                searchInput.focus();
-            }, 500);
+            scrollToTop();
+            setTimeout(() => searchInput.focus(), 600); // 等滚动完了再聚焦
         }
     </script>
 </body>
