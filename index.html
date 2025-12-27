@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datxy - 多模态 AI 导航 & 在线工具箱</title>
-    <meta name="description" content="Datxy 收录全球优质的多模态 AI 资源，并提供免费的在线数据处理工具。">
+    <meta name="description" content="Datxy 收录全球优质的图像、视频、音频、文本及多模态 AI 数据集与工具。">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* --- 核心布局样式 (PC端 3列) --- */
-        
+        /* --- 布局优化 (解决 PC 端太窄的问题) --- */
+        .container {
+            max-width: 1400px; /* 扩大容器宽度 */
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
         /* 默认 (手机): 1列 */
         .resource-grid { 
             display: grid; 
@@ -17,14 +22,19 @@
             grid-template-columns: 1fr; 
         }
 
-        /* 平板: 2列 */
+        /* 平板 (iPad): 2列 */
         @media (min-width: 768px) {
             .resource-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        /* PC (大于1024px): 强制 3列 */
+        /* 小屏电脑 (笔记本): 3列 */
         @media (min-width: 1024px) {
             .resource-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* 大屏电脑 (台式机 1200px+): 4列 -> 看起来更充实！ */
+        @media (min-width: 1400px) {
+            .resource-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
         /* --- 搜索与头部样式 --- */
@@ -37,12 +47,12 @@
         }
         .search-input:focus { border-color: var(--accent-color); background: rgba(0,0,0,0.3); outline: none; }
         
-        /* --- 极简过滤器样式 --- */
-        .filter-tags { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+        /* --- 全分类过滤器 --- */
+        .filter-tags { display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
         .tag-btn {
             background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-secondary);
-            padding: 10px 30px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: 0.3s;
-            display: flex; align-items: center; gap: 8px; font-weight: 500;
+            padding: 8px 20px; border-radius: 50px; cursor: pointer; font-size: 0.95rem; transition: 0.3s;
+            display: flex; align-items: center; gap: 6px; font-weight: 500;
         }
         .tag-btn:hover, .tag-btn.active { 
             background: var(--accent-color); color: #000; border-color: var(--accent-color); transform: translateY(-2px);
@@ -59,9 +69,10 @@
         .res-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; color: #fff; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         
         /* 颜色区分 */
-        .badge-util { background: linear-gradient(135deg, #10b981, #059669); } /* 绿色: 纯工具 */
-        .badge-ai { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }   /* 紫色: AI/多模态 */
-        
+        .badge-tool { background: linear-gradient(135deg, #10b981, #059669); } /* 绿色: 工具 */
+        .badge-data { background: linear-gradient(135deg, #3b82f6, #2563eb); } /* 蓝色: 数据 */
+        .badge-ai   { background: linear-gradient(135deg, #8b5cf6, #6d28d9); } /* 紫色: AI */
+
         .res-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
         .res-desc { font-size: 0.95rem; color: var(--text-secondary); flex-grow: 1; margin-bottom: 20px; line-height: 1.6; }
         
@@ -70,9 +81,24 @@
             background: rgba(255,255,255,0.05); color: var(--text-primary); font-weight: 600; margin-top: auto; border: 1px solid transparent; 
         }
         .res-link:hover { border-color: var(--accent-color); color: var(--accent-color); }
-
-        /* 标签小字 */
         .mini-tag { position: absolute; top: 25px; right: 25px; font-size: 0.8rem; color: #64748b; font-family: monospace; }
+
+        /* --- 右下角悬浮按钮组 --- */
+        .fab-container {
+            position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 999;
+        }
+        .fab-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--accent-color); color: #000;
+            font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .fab-btn:hover { transform: scale(1.1); background: #fff; }
+        .fab-btn.secondary { background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        /* 移动端稍微小一点 */
+        @media (max-width: 768px) {
+            .fab-container { bottom: 20px; right: 20px; }
+            .fab-btn { width: 45px; height: 45px; }
+        }
     </style>
 </head>
 <body>
@@ -85,18 +111,22 @@
         </div>
     </nav>
 
-    <header class="search-section">
-        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">多模态 AI 与开发工具</h1>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem;">一站式导航：从数据处理工具到前沿多模态 AI 资源。</p>
+    <header class="search-section" id="topHeader">
+        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">多模态 AI 与数据工具</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">一站式导航：工具、图像、视频、音频、文本及多模态资源。</p>
         
         <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="搜索 (例如: JSON, Sora, GPT-4)...">
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索资源 (例如: JSON, Sora, GPT-4)...">
         </div>
 
         <div class="filter-tags" id="filterContainer">
             <button class="tag-btn active" onclick="filterData('all')">♾️ 全部</button>
-            <button class="tag-btn" onclick="filterData('util')">🛠️ 在线工具</button>
-            <button class="tag-btn" onclick="filterData('ai')">🧠 多模态 AI</button>
+            <button class="tag-btn" onclick="filterData('tool')">🛠️ 在线工具</button>
+            <button class="tag-btn" onclick="filterData('image')">🖼️ 图像</button>
+            <button class="tag-btn" onclick="filterData('video')">🎬 视频</button>
+            <button class="tag-btn" onclick="filterData('audio')">🎵 音频</button>
+            <button class="tag-btn" onclick="filterData('text')">📝 文本</button>
+            <button class="tag-btn" onclick="filterData('multi')">🧠 多模态</button>
         </div>
     </header>
 
@@ -105,6 +135,11 @@
             </div>
     </main>
 
+    <div class="fab-container">
+        <button class="fab-btn" onclick="jumpToSearch()" title="搜索">🔍</button>
+        <button class="fab-btn secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="回到顶部">⬆️</button>
+    </div>
+
     <footer style="text-align: center; padding: 3rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); margin-top: 2rem;">
         <p>© 2025 Datxy.com</p>
         <p style="font-size: 0.8rem; margin-top: 10px;">Developed by <a href="https://cpuck.com" target="_blank" style="color: var(--accent-color);">Cpuck</a></p>
@@ -112,85 +147,37 @@
 
     <script>
         // === 资源数据库 ===
-        // group: 'util' (在线工具) 或 'ai' (多模态资源)
-        // tag: 用于显示具体的类型（如 Text, Video, Image）
+        // category: 必须对应过滤器参数 (tool, image, video, audio, text, multi)
+        // type: 用于显示标签颜色 (tool, dataset, ai)
         
         const resources = [
-            // --- Group: 在线工具 (util) ---
-            {
-                group: 'util', tag: 'DEV',
-                title: 'JSON 格式化',
-                desc: '本地处理：校验、美化和压缩 JSON 数据，支持错误定位。',
-                url: 'tools/json.html'
-            },
-            {
-                group: 'util', tag: 'ENCODE',
-                title: '文本编码转换',
-                desc: 'URL Decode、Unicode、Hex、Base64 文本编码互转。',
-                url: 'tools/text-encoding.html'
-            },
-            {
-                group: 'util', tag: 'TIME',
-                title: '时间戳转换',
-                desc: 'Unix 时间戳与日期时间相互转换，精确到毫秒。',
-                url: 'tools/timestamp.html'
-            },
-            {
-                group: 'util', tag: 'IMAGE',
-                title: '图片格式转换',
-                desc: 'JPG / PNG / WebP 格式互转，纯浏览器本地处理。',
-                url: 'tools/image-convert.html'
-            },
-            {
-                group: 'util', tag: 'BASE64',
-                title: 'Base64 图片编码',
-                desc: '将图片转换为 Base64 代码，或将代码还原为图片。',
-                url: 'tools/base64.html'
-            },
+            // --- 在线工具 (tool) ---
+            { category: 'tool', type: 'tool', title: 'JSON 格式化', desc: '本地处理：校验、美化和压缩 JSON 数据。', url: 'tools/json.html' },
+            { category: 'tool', type: 'tool', title: '文本编码转换', desc: 'URL Decode、Unicode、Hex、Base64 互转。', url: 'tools/text-encoding.html' },
+            { category: 'tool', type: 'tool', title: '时间戳转换', desc: 'Unix 时间戳与日期时间相互转换。', url: 'tools/timestamp.html' },
+            { category: 'tool', type: 'tool', title: '图片格式转换', desc: 'JPG / PNG / WebP 格式互转，纯浏览器本地处理。', url: 'tools/image-convert.html' },
+            { category: 'tool', type: 'tool', title: 'Base64 图片编码', desc: '将图片转换为 Base64 代码。', url: 'tools/base64.html' },
 
-            // --- Group: 多模态 AI (ai) ---
-            {
-                group: 'ai', tag: 'VIDEO',
-                title: 'Sora (OpenAI)',
-                desc: 'OpenAI 发布的文生视频模型，能够生成长达一分钟的高清视频。',
-                url: 'https://openai.com/sora'
-            },
-            {
-                group: 'ai', tag: 'MULTI',
-                title: 'ChatGPT (GPT-4)',
-                desc: '最强大多模态助手，支持文本、代码、图片识别与 DALL·E 3 绘图。',
-                url: 'https://chat.openai.com/'
-            },
-            {
-                group: 'ai', tag: 'MULTI',
-                title: 'Google Gemini',
-                desc: 'Google 原生多模态大模型，在视频理解和长文本分析上表现优异。',
-                url: 'https://gemini.google.com/'
-            },
-            {
-                group: 'ai', tag: 'IMAGE',
-                title: 'Midjourney',
-                desc: '目前艺术性最强的 AI 图像生成工具，支持 Discord 社区互动。',
-                url: 'https://www.midjourney.com/'
-            },
-            {
-                group: 'ai', tag: 'DATASET',
-                title: 'Hugging Face',
-                desc: 'AI 界的 GitHub，汇聚全球最大的开源模型与数据集 (NLP/CV/Audio)。',
-                url: 'https://huggingface.co/'
-            },
-            {
-                group: 'ai', tag: 'DATASET',
-                title: 'LAION-5B',
-                desc: '拥有 50 亿图文对的超大规模数据集，是 Stable Diffusion 的训练基础。',
-                url: 'https://laion.ai/'
-            },
-            {
-                group: 'ai', tag: 'AUDIO',
-                title: 'Suno AI',
-                desc: '能够生成广播级音质歌曲的 AI 音乐生成器，支持人声演唱。',
-                url: 'https://suno.com/'
-            }
+            // --- 文本类 (text) ---
+            { category: 'text', type: 'data', title: 'Hugging Face NLP', desc: '全球最大的自然语言处理数据集中心。', url: 'https://huggingface.co/datasets' },
+            { category: 'text', type: 'data', title: 'Common Crawl', desc: '开放式网络抓取数据库，大模型训练核心源。', url: 'https://commoncrawl.org/' },
+
+            // --- 图像类 (image) ---
+            { category: 'image', type: 'ai', title: 'Midjourney', desc: '艺术性最强的 AI 图像生成工具。', url: 'https://www.midjourney.com/' },
+            { category: 'image', type: 'data', title: 'ImageNet', desc: '计算机视觉领域的"Hello World"数据集。', url: 'https://www.image-net.org/' },
+            { category: 'image', type: 'data', title: 'LAION-5B', desc: '50 亿图文对的超大规模数据集。', url: 'https://laion.ai/' },
+
+            // --- 视频类 (video) ---
+            { category: 'video', type: 'ai', title: 'Sora (OpenAI)', desc: 'OpenAI 发布的文生视频模型，生成高清视频。', url: 'https://openai.com/sora' },
+            { category: 'video', type: 'ai', title: 'Runway Gen-2', desc: '专业的 AI 视频生成与编辑工具。', url: 'https://runwayml.com/' },
+
+            // --- 音频类 (audio) ---
+            { category: 'audio', type: 'ai', title: 'Suno AI', desc: '生成广播级音质歌曲的 AI 音乐生成器。', url: 'https://suno.com/' },
+            { category: 'audio', type: 'ai', title: 'ElevenLabs', desc: '目前最自然的 AI 语音合成 (TTS)。', url: 'https://elevenlabs.io/' },
+
+            // --- 多模态 (multi) ---
+            { category: 'multi', type: 'ai', title: 'ChatGPT (GPT-4)', desc: '最强多模态助手，支持文本、代码、绘图。', url: 'https://chat.openai.com/' },
+            { category: 'multi', type: 'ai', title: 'Google Gemini', desc: 'Google 原生多模态大模型，擅长长文本分析。', url: 'https://gemini.google.com/' }
         ];
 
         // --- 渲染逻辑 ---
@@ -203,17 +190,19 @@
                 const card = document.createElement('div');
                 card.className = 'res-card';
                 
-                // 根据 group 显示不同样式
-                const isUtil = item.group === 'util';
-                const badgeClass = isUtil ? 'badge-util' : 'badge-ai';
-                const badgeText = isUtil ? 'TOOL' : 'AI / DATA';
-                const btnText = isUtil ? '立即使用' : '访问官网';
-                const target = isUtil ? '_self' : '_blank';
+                // 标签样式判断
+                let badgeClass = 'badge-tool';
+                let badgeText = 'TOOL';
+                if(item.type === 'data') { badgeClass = 'badge-data'; badgeText = 'DATA'; }
+                if(item.type === 'ai') { badgeClass = 'badge-ai'; badgeText = 'AI'; }
+
+                const btnText = item.type === 'tool' ? '立即使用' : '访问官网';
+                const target = item.type === 'tool' ? '_self' : '_blank';
                 
                 card.innerHTML = `
                     <div class="res-top">
                         <span class="res-badge ${badgeClass}">${badgeText}</span>
-                        <span class="mini-tag">#${item.tag}</span>
+                        <span class="mini-tag">#${item.category.toUpperCase()}</span>
                     </div>
                     <a href="${item.url}" target="${target}" class="res-title">${item.title}</a>
                     <p class="res-desc">${item.desc}</p>
@@ -223,19 +212,18 @@
             });
         }
 
-        // 初始化显示全部
+        // 初始化
         render(resources);
 
-        // 过滤功能 (只处理 util 和 ai 两个组)
-        function filterData(group) {
-            // 更新按钮高亮
+        // 过滤功能
+        function filterData(cat) {
             document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            if(group === 'all') {
+            if(cat === 'all') {
                 render(resources);
             } else {
-                const filtered = resources.filter(item => item.group === group);
+                const filtered = resources.filter(item => item.category === cat);
                 render(filtered);
             }
         }
@@ -246,10 +234,20 @@
             const filtered = resources.filter(item => 
                 item.title.toLowerCase().includes(keyword) || 
                 item.desc.toLowerCase().includes(keyword) ||
-                item.tag.toLowerCase().includes(keyword)
+                item.category.toLowerCase().includes(keyword)
             );
             render(filtered);
         });
+
+        // --- 悬浮按钮逻辑：跳转并聚焦搜索框 ---
+        function jumpToSearch() {
+            // 平滑滚动到顶部
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            // 聚焦输入框 (稍微延迟一点，等滚动开始)
+            setTimeout(() => {
+                searchInput.focus();
+            }, 500);
+        }
     </script>
 </body>
 </html>
