@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线文本编码转换工具 - Datxy</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../index.html" class="logo">Datxy</a>
+        <div class="nav-links"><a href="../index.html">返回首页</a></div>
+    </nav>
+
+    <div class="container">
+        <h2>文本编码转换</h2>
+        
+        <div class="tool-box">
+            <textarea id="input" rows="5" placeholder="在此输入需要转换的文本..."></textarea>
+            
+            <div class="tool-controls" style="gap: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);">URL 编码:</span><br>
+                    <button onclick="doConvert('urlEnc')">编码 (Encode)</button>
+                    <button class="secondary" onclick="doConvert('urlDec')">解码 (Decode)</button>
+                </div>
+                
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Unicode (\u):</span><br>
+                    <button onclick="doConvert('uniEnc')">转 Unicode</button>
+                    <button class="secondary" onclick="doConvert('uniDec')">转中文</button>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);">十六进制 (Hex):</span><br>
+                    <button onclick="doConvert('hexEnc')">转 Hex</button>
+                    <button class="secondary" onclick="doConvert('hexDec')">Hex 转文</button>
+                </div>
+            </div>
+
+            <textarea id="output" rows="5" placeholder="转换结果..." readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        function doConvert(type) {
+            const input = document.getElementById('input').value;
+            const output = document.getElementById('output');
+            if(!input) return;
+
+            try {
+                switch(type) {
+                    case 'urlEnc':
+                        output.value = encodeURIComponent(input);
+                        break;
+                    case 'urlDec':
+                        output.value = decodeURIComponent(input);
+                        break;
+                    case 'uniEnc':
+                        output.value = input.split('').map(char => '\\u' + char.charCodeAt(0).toString(16).padStart(4, '0')).join('');
+                        break;
+                    case 'uniDec':
+                        output.value = JSON.parse('"' + input.replace(/\\/g, '\\\\').replace(/\\\\u/g, '\\u') + '"'); 
+                        // 简单的 Unicode 解码 trick
+                        break;
+                    case 'hexEnc':
+                        let hex = '';
+                        for(let i=0; i<input.length; i++) {
+                            hex += input.charCodeAt(i).toString(16) + " ";
+                        }
+                        output.value = hex.trim();
+                        break;
+                    case 'hexDec':
+                        let hexStr = input.replace(/\s+/g, '');
+                        let str = '';
+                        for (let i = 0; i < hexStr.length; i += 2) {
+                            str += String.fromCharCode(parseInt(hexStr.substr(i, 2), 16));
+                        }
+                        output.value = str;
+                        break;
+                }
+            } catch(e) {
+                output.value = "❌ 转换失败: " + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
