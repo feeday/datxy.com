@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线 JSON 格式化工具 - Datxy</title>
+    <meta name="description" content="免费在线 JSON 格式化、校验、压缩工具。">
+    <link rel="stylesheet" href="../css/style.css"> </head>
+<body>
+    <nav class="navbar">
+        <a href="../index.html" class="logo">Datxy</a>
+        <div class="nav-links"><a href="../index.html">返回首页</a></div>
+    </nav>
+
+    <div class="container">
+        <h2>JSON 格式化 / 校验</h2>
+        
+        <div class="tool-box">
+            <textarea id="jsonInput" rows="10" placeholder="请在此粘贴您的 JSON 代码..."></textarea>
+            
+            <div class="tool-controls">
+                <button onclick="formatJson()">✨ 格式化 (Pretty)</button>
+                <button class="secondary" onclick="compressJson()">📦 压缩 (Minify)</button>
+                <button class="secondary" onclick="clearAll()">🗑️ 清空</button>
+                <span id="msg" style="margin-left:auto; line-height:34px; font-size: 0.9rem;"></span>
+            </div>
+
+            <textarea id="jsonOutput" rows="10" placeholder="处理结果将显示在这里..." readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const inputArea = document.getElementById('jsonInput');
+        const outputArea = document.getElementById('jsonOutput');
+        const msg = document.getElementById('msg');
+
+        function formatJson() {
+            try {
+                const raw = inputArea.value;
+                if(!raw) return;
+                const obj = JSON.parse(raw);
+                outputArea.value = JSON.stringify(obj, null, 4); // 4空格缩进
+                showMsg('✅ 格式化成功', '#4ade80');
+            } catch (e) {
+                outputArea.value = e.message;
+                showMsg('❌ JSON 格式错误', '#ef4444');
+            }
+        }
+
+        function compressJson() {
+            try {
+                const raw = inputArea.value;
+                if(!raw) return;
+                const obj = JSON.parse(raw);
+                outputArea.value = JSON.stringify(obj);
+                showMsg('✅ 压缩成功', '#4ade80');
+            } catch (e) {
+                showMsg('❌ JSON 格式错误', '#ef4444');
+            }
+        }
+
+        function clearAll() {
+            inputArea.value = '';
+            outputArea.value = '';
+            msg.innerText = '';
+        }
+
+        function showMsg(text, color) {
+            msg.innerText = text;
+            msg.style.color = color;
+        }
+    </script>
+</body>
+</html>
