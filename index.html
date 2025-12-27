@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DatXY</title>
+    <title>Data Resources</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -165,16 +165,13 @@
             position: relative; display: flex; flex-direction: column; overflow: hidden;
         }
         
-        /* 👇 修改：除了 :hover 外，新增 .active-focus 类 
-           这样键盘选中时，样式和鼠标悬停一模一样
-        */
         .card:hover, .card.active-focus { 
             transform: translateY(-5px); border-color: var(--border-hover);
             background: rgba(30, 41, 59, 0.8);
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6); 
         }
 
-        /* 颜色系统适配键盘选中 */
+        /* 颜色系统 */
         .card:has(.tag-tool):hover,  .card.active-focus:has(.tag-tool)  { border-color: rgba(52, 211, 153, 0.4); }
         .card:has(.tag-image):hover, .card.active-focus:has(.tag-image) { border-color: rgba(244, 114, 182, 0.4); }
         .card:has(.tag-video):hover, .card.active-focus:has(.tag-video) { border-color: rgba(167, 139, 250, 0.4); }
@@ -189,6 +186,18 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
         
+        /* 置顶图标样式 */
+        .pin-icon {
+            position: absolute; top: 0; left: 0;
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #ef4444 50%, transparent 50%);
+            display: flex; align-items: flex-start; justify-content: flex-start;
+            padding: 4px 0 0 4px;
+            border-bottom-right-radius: 32px; /* 扇形效果 */
+            z-index: 5;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+
         .tag-tool { color: #34d399; } .tag-image { color: #f472b6; }
         .tag-video { color: #a78bfa; } .tag-audio { color: #60a5fa; }
         .tag-text { color: #e5e7eb; } .tag-multi { color: #fbbf24; }
@@ -204,6 +213,7 @@
             border: 1px solid rgba(255,255,255,0.02); transition: 0.2s; margin-top: auto;
         }
         .card-link:hover { background: var(--text-primary); color: #000; border-color: #fff; }
+        
 
         /* ================== 4. Footer ================== */
         .site-footer {
@@ -295,8 +305,9 @@
     <div class="fab-top" id="fabTop" onclick="scrollToTop()">↑</div>
 
     <script>
+        // 增加 isTop: true 属性来实现置顶
         const resources = [
-            { cat: 'tool', title: 'JSON 格式化', desc: '本地校验、美化和压缩 JSON 数据。', url: 'tools/json.html' },
+            { cat: 'tool', title: 'JSON 格式化', desc: '本地校验、美化和压缩 JSON 数据。', url: 'tools/json.html', isTop: true },
             { cat: 'tool', title: '文本编码转换', desc: 'URL Decode、Base64、Hex 互转。', url: 'tools/text-encoding.html' },
             { cat: 'tool', title: '时间戳转换', desc: 'Unix 时间戳与日期互转。', url: 'tools/timestamp.html' },
             { cat: 'model', title: 'Llama 3', desc: 'Meta 开源的最强语言模型，支持本地部署。', url: 'https://llama.meta.com/' },
@@ -304,13 +315,13 @@
             { cat: 'model', title: 'Mistral 7B', desc: '高性能、低延迟的开源大模型新标杆。', url: 'https://mistral.ai/' },
             { cat: 'news', title: 'AI News Daily', desc: '每日 AI 行业快讯与技术突破。', url: '#' },
             { cat: 'news', title: 'Hugging Face Blog', desc: '深度技术博客与论文解读。', url: 'https://huggingface.co/blog' },
-            { cat: 'image', title: 'Midjourney', desc: '艺术级 AI 绘图生成工具。', url: 'https://www.midjourney.com/' },
+            { cat: 'image', title: 'Midjourney', desc: '艺术级 AI 绘图生成工具。', url: 'https://www.midjourney.com/', isTop: true },
             { cat: 'image', title: 'LAION-5B', desc: '50亿图文对，Stable Diffusion 训练基石。', url: 'https://laion.ai/' },
-            { cat: 'video', title: 'Sora (OpenAI)', desc: '最强文生视频模型，生成高清长视频。', url: 'https://openai.com/sora' },
+            { cat: 'video', title: 'Sora (OpenAI)', desc: '最强文生视频模型，生成高清长视频。', url: 'https://openai.com/sora', isTop: true },
             { cat: 'video', title: 'Runway Gen-2', desc: '专业的 AI 视频生成与编辑工具。', url: 'https://runwayml.com/' },
             { cat: 'audio', title: 'Suno AI', desc: '生成广播级歌曲的 AI 音乐生成器。', url: 'https://suno.com/' },
             { cat: 'audio', title: 'ElevenLabs', desc: '最自然的 AI 语音合成 (TTS)。', url: 'https://elevenlabs.io/' },
-            { cat: 'multi', title: 'ChatGPT-4', desc: '全能助手：文本、代码、识图、绘图。', url: 'https://chat.openai.com/' },
+            { cat: 'multi', title: 'ChatGPT-4', desc: '全能助手：文本、代码、识图、绘图。', url: 'https://chat.openai.com/', isTop: true },
             { cat: 'multi', title: 'Gemini', desc: 'Google 原生多模态大模型。', url: 'https://gemini.google.com/' }
         ];
 
@@ -318,14 +329,21 @@
         const searchInput = document.getElementById('searchInput');
         const searchClear = document.getElementById('searchClear');
 
-        // 全局变量，追踪当前显示的卡片和选中的索引
         let visibleCards = [];
         let selectedCardIndex = -1;
 
         function render(list) {
             grid.innerHTML = '';
-            visibleCards = []; // 清空之前的记录
-            selectedCardIndex = -1; // 重置选中状态
+            visibleCards = []; 
+            selectedCardIndex = -1;
+
+            // ✨ 核心逻辑：排序 ✨
+            // 如果 isTop 为 true，排在前面；否则保持原位
+            list.sort((a, b) => {
+                if (a.isTop && !b.isTop) return -1;
+                if (!a.isTop && b.isTop) return 1;
+                return 0;
+            });
 
             list.forEach((item, index) => {
                 const el = document.createElement('div');
@@ -353,20 +371,20 @@
 
                 const target = '_blank';
                 
+                // ✨ 如果是置顶，插入 pin-icon ✨
+                const pinHtml = item.isTop ? '<div class="pin-icon"></div>' : '';
+
                 el.innerHTML = `
+                    ${pinHtml}
                     <span class="card-tag ${tagClass}">${tagName}</span>
                     <div class="card-title">${item.title}</div>
                     <div class="card-desc">${item.desc}</div>
                     <a href="${item.url}" target="${target}" class="card-link">${item.cat === 'tool' ? '立即使用' : '访问官网'} →</a>
                 `;
                 
-                // 鼠标移入时，更新 JS 选中的索引，避免键盘操作时跳跃
-                el.addEventListener('mouseenter', () => {
-                    updateSelection(index);
-                });
-
+                el.addEventListener('mouseenter', () => { updateSelection(index); });
                 grid.appendChild(el);
-                visibleCards.push(el); // 记录 DOM 元素
+                visibleCards.push(el); 
             });
         }
         
@@ -396,104 +414,73 @@
         window.addEventListener('load', () => { const activeBtn = document.querySelector('.tag-btn.active'); if(activeBtn) moveGlider(activeBtn); });
         window.addEventListener('resize', () => { const activeBtn = document.querySelector('.tag-btn.active'); if(activeBtn) moveGlider(activeBtn); });
 
-
-        // ================== 🎹 全键盘导航逻辑 (核心修改) ==================
-        
-        // 辅助函数：更新选中状态
+        // ================== 全键盘导航 ==================
         function updateSelection(index) {
-            // 移除所有卡片的高亮
             visibleCards.forEach(c => c.classList.remove('active-focus'));
-            
-            // 范围检查
             if (index >= 0 && index < visibleCards.length) {
                 selectedCardIndex = index;
-                const card = visibleCards[index];
-                card.classList.add('active-focus');
-                
-                // 只有键盘操作时才滚动（简单判断：如果是由 mouseenter 触发的则不滚动）
-                // 但为了简化，这里我们可以只在 keydown 里调用 scrollIntoView
+                visibleCards[index].classList.add('active-focus');
             } else {
                 selectedCardIndex = -1;
             }
         }
 
         document.addEventListener('keydown', (e) => {
-            // 1. 如果正在搜索框输入，允许左右键移动光标，不允许切换分类/卡片
             if (document.activeElement === searchInput) {
                 if (e.key === 'Enter') {
-                    // 在搜索框按回车，如果有结果，选中第一个
                     if (visibleCards.length > 0) {
-                        searchInput.blur(); // 退出输入框
-                        updateSelection(0); // 选中第一个
+                        searchInput.blur();
+                        updateSelection(0);
                     }
                 }
                 return;
             }
 
-            // 2. 左右键：切换顶部分类
             if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                e.preventDefault(); // 防止页面横向滚动
+                e.preventDefault(); 
                 const buttons = Array.from(document.querySelectorAll('.tag-btn'));
                 const activeIndex = buttons.findIndex(btn => btn.classList.contains('active'));
                 let newIndex = activeIndex;
-
                 if (e.key === 'ArrowRight') newIndex = (activeIndex + 1) % buttons.length;
                 else if (e.key === 'ArrowLeft') newIndex = (activeIndex - 1 + buttons.length) % buttons.length;
-
                 buttons[newIndex].click();
                 return;
             }
 
-            // 3. 上下键：选择信息流卡片
             if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                e.preventDefault(); // 防止页面滚动
-                
+                e.preventDefault(); 
                 if (visibleCards.length === 0) return;
-
                 if (e.key === 'ArrowDown') {
-                    // 如果还没选中，选中第一个；否则下一个
-                    if (selectedCardIndex < visibleCards.length - 1) {
-                        selectedCardIndex++;
-                    } else {
-                        // 到底了，可以循环回到顶部，或者停住。这里选择停住
-                    }
+                    if (selectedCardIndex < visibleCards.length - 1) selectedCardIndex++;
                 } else if (e.key === 'ArrowUp') {
-                    if (selectedCardIndex > 0) {
-                        selectedCardIndex--;
-                    } else {
-                        // 到顶了
-                    }
+                    if (selectedCardIndex > 0) selectedCardIndex--;
                 }
-
                 updateSelection(selectedCardIndex);
-                
-                // 确保选中的卡片在视野内
                 const card = visibleCards[selectedCardIndex];
-                if (card) {
-                    card.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                }
+                if (card) card.scrollIntoView({ block: 'center', behavior: 'smooth' });
                 return;
             }
 
-            // 4. 回车键：打开当前选中卡片的链接
             if (e.key === 'Enter') {
                 if (selectedCardIndex !== -1 && visibleCards[selectedCardIndex]) {
                     const link = visibleCards[selectedCardIndex].querySelector('a');
-                    if (link) {
-                        // 模拟点击，触发 target="_blank"
-                        link.click();
-                    }
+                    if (link) link.click();
                 }
             }
         });
 
-
-        // ================== 搜索与清除逻辑 ==================
+        // ================== 搜索逻辑 (含 URL 搜索) ==================
         searchInput.addEventListener('input', (e) => {
             const val = e.target.value;
             searchClear.style.display = val.length > 0 ? 'block' : 'none';
             const k = val.toLowerCase();
-            render(resources.filter(i => i.title.toLowerCase().includes(k) || i.desc.toLowerCase().includes(k) || i.cat.includes(k)));
+            // ✨ 核心逻辑：增加了对 item.url 的检索 ✨
+            render(resources.filter(i => 
+                i.title.toLowerCase().includes(k) || 
+                i.desc.toLowerCase().includes(k) || 
+                i.cat.includes(k) ||
+                i.url.toLowerCase().includes(k) 
+            ));
         });
 
         function clearSearch() {
