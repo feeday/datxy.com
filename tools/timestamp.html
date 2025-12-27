@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Unix 时间戳转换工具 - Datxy</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../index.html" class="logo">Datxy</a>
+        <div class="nav-links"><a href="../index.html">返回首页</a></div>
+    </nav>
+
+    <div class="container">
+        <h2>Unix 时间戳转换</h2>
+        
+        <div class="tool-box" style="text-align: center; margin-bottom: 2rem;">
+            <p style="color: var(--text-secondary);">当前 Unix 时间戳 (秒)</p>
+            <h1 id="currentTs" style="font-size: 3rem; color: var(--accent-color); font-family: monospace;">Loading...</h1>
+            <button class="secondary" onclick="togglePause()" id="pauseBtn">暂停</button>
+        </div>
+
+        <div class="tool-box">
+            <div style="margin-bottom: 1.5rem;">
+                <label>时间戳 (秒/毫秒) ➡️ 日期时间</label>
+                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <input type="text" id="tsInput" placeholder="例如: 1735286400">
+                    <button onclick="tsToDate()">转换</button>
+                </div>
+                <input type="text" id="dateResult" readonly style="margin-top: 10px; border-color: transparent; background: rgba(255,255,255,0.05);" placeholder="结果显示区">
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                <label>日期时间 (YYYY-MM-DD HH:mm:ss) ➡️ 时间戳</label>
+                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <input type="text" id="dateInput" value="2025-01-01 00:00:00">
+                    <button onclick="dateToTs()">转换</button>
+                </div>
+                <input type="text" id="tsResult" readonly style="margin-top: 10px; border-color: transparent; background: rgba(255,255,255,0.05);" placeholder="结果显示区">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 自动更新当前时间戳
+        let isPaused = false;
+        setInterval(() => {
+            if(!isPaused) {
+                document.getElementById('currentTs').innerText = Math.floor(Date.now() / 1000);
+            }
+        }, 1000);
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('pauseBtn').innerText = isPaused ? "继续" : "暂停";
+        }
+
+        // 时间戳转日期
+        function tsToDate() {
+            let ts = document.getElementById('tsInput').value.trim();
+            if(!ts) return;
+            // 判断是秒还是毫秒
+            if(ts.length === 10) ts = ts * 1000;
+            else ts = Number(ts);
+            
+            const date = new Date(ts);
+            if(date.toString() === 'Invalid Date') {
+                document.getElementById('dateResult').value = "❌ 无效的时间戳";
+            } else {
+                document.getElementById('dateResult').value = date.toLocaleString('zh-CN', { hour12: false });
+            }
+        }
+
+        // 日期转时间戳
+        function dateToTs() {
+            const dateStr = document.getElementById('dateInput').value;
+            const date = new Date(dateStr);
+            if(date.toString() === 'Invalid Date') {
+                document.getElementById('tsResult').value = "❌ 无效的日期格式";
+            } else {
+                document.getElementById('tsResult').value = Math.floor(date.getTime() / 1000);
+            }
+        }
+    </script>
+</body>
+</html>
