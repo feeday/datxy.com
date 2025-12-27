@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datxy - 全球数据集导航 & 数据处理工具箱</title>
-    <meta name="description" content="Datxy 收录全球优质公开数据集(AI/NLP/CV/金融)，并提供免费的 JSON、Base64、时间戳等数据处理工具。">
+    <title>Datxy - 多模态 AI 导航 & 在线工具箱</title>
+    <meta name="description" content="Datxy 收录全球优质的图像、视频、音频、文本及多模态 AI 数据集与工具。">
     <link rel="stylesheet" href="css/style.css">
     <style>
         /* 针对导航站的特有样式 */
         .search-section { text-align: center; padding: 4rem 1rem; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%); }
+        
         .search-box {
             max-width: 600px; margin: 0 auto; position: relative;
         }
@@ -18,25 +19,30 @@
         }
         .search-input:focus { border-color: var(--accent-color); background: rgba(0,0,0,0.3); outline: none; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
         
-        /* 标签过滤器 */
-        .filter-tags { display: flex; justify-content: center; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        /* 模态过滤器 */
+        .filter-tags { display: flex; justify-content: center; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
         .tag-btn {
             background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary);
-            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.2s;
+            padding: 6px 18px; border-radius: 20px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; display: flex; align-items: center; gap: 5px;
         }
-        .tag-btn:hover, .tag-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+        .tag-btn:hover, .tag-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); font-weight: 600; }
 
         /* 资源网格 */
         .resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px 0; }
         .res-card {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px;
-            transition: 0.3s; display: flex; flex-direction: column; height: 100%;
+            transition: 0.3s; display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden;
         }
         .res-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
         
         .res-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
-        .res-type { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-secondary); }
-        .res-title { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; }
+        
+        /* 类型标签 (工具 vs 数据集) */
+        .res-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; color: #fff; font-weight: bold; }
+        .badge-tool { background: linear-gradient(135deg, #10b981, #059669); } /* 绿色代表工具 */
+        .badge-data { background: linear-gradient(135deg, #6366f1, #4f46e5); } /* 蓝色代表资源 */
+        
+        .res-title { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); margin-bottom: 5px; display: flex; align-items: center; gap: 8px;}
         .res-desc { font-size: 0.9rem; color: var(--text-secondary); flex-grow: 1; margin-bottom: 15px; line-height: 1.5; }
         
         .res-meta { display: flex; gap: 10px; font-size: 0.8rem; color: #64748b; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; margin-top: auto; }
@@ -48,27 +54,26 @@
     <nav class="navbar">
         <a href="/" class="logo">Datxy</a>
         <div class="nav-links">
-            <a href="#tools">在线工具</a>
-            <a href="#datasets">数据集</a>
-            <a href="https://github.com/feeday/datxy.com" target="_blank">提交收录</a>
+            <a href="https://github.com/feeday/datxy.com" target="_blank">GitHub</a>
+            <a href="https://cpuck.com" target="_blank">博客</a>
         </div>
     </nav>
 
     <header class="search-section">
-        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">发现高质量数据集 & 工具</h1>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem;">汇聚 AI 训练、金融分析、科学研究等领域的公开数据资源。</p>
+        <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">多模态 AI 资源导航</h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">汇聚全球优质的图像、视频、音频、文本及多模态工具与数据集。</p>
         
         <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="搜索数据集、工具 (例如: NLP, ImageNet, JSON)...">
+            <input type="text" class="search-input" id="searchInput" placeholder="搜索资源 (例如: OCR, Sora, JSON)...">
         </div>
 
         <div class="filter-tags" id="filterContainer">
-            <button class="tag-btn active" onclick="filterData('all')">全部</button>
-            <button class="tag-btn" onclick="filterData('tool')">🔧 在线工具</button>
-            <button class="tag-btn" onclick="filterData('cv')">👁️ 计算机视觉</button>
-            <button class="tag-btn" onclick="filterData('nlp')">🗣️ 自然语言(NLP)</button>
-            <button class="tag-btn" onclick="filterData('finance')">💰 金融/经济</button>
-            <button class="tag-btn" onclick="filterData('fun')">🎮 趣味/生活</button>
+            <button class="tag-btn active" onclick="filterData('all')">♾️ 全部</button>
+            <button class="tag-btn" onclick="filterData('text')">📝 文本 (Text)</button>
+            <button class="tag-btn" onclick="filterData('image')">🖼️ 图像 (Image)</button>
+            <button class="tag-btn" onclick="filterData('video')">🎬 视频 (Video)</button>
+            <button class="tag-btn" onclick="filterData('audio')">🎵 音频 (Audio)</button>
+            <button class="tag-btn" onclick="filterData('multi')">🧠 多模态 (Multi)</button>
         </div>
     </header>
 
@@ -78,125 +83,148 @@
     </main>
 
     <footer style="text-align: center; padding: 3rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); margin-top: 2rem;">
-        <p>© 2025 Datxy.com | Connecting Data & Developers</p>
+        <p>© 2025 Datxy.com | Multimodal Resource Hub</p>
         <p style="font-size: 0.8rem; margin-top: 10px;">Developed by <a href="https://cpuck.com" target="_blank" style="color: var(--accent-color);">Cpuck</a></p>
     </footer>
 
     <script>
-        // --- 核心数据配置中心 ---
-        // 你以后只需要在这里加数据即可！
+        // === 资源数据库 ===
+        // 关键：category 字段对应上面的 filterData 参数 (text, image, video, audio, multi)
+        // type 字段决定是显示“绿色工具标”还是“蓝色数据标” (tool, dataset)
+        
         const resources = [
-            // === 你的自研工具 (保留！) ===
+            // --- 1. 文本类 (Text) ---
             {
-                type: 'tool', category: 'tool',
+                category: 'text', type: 'tool',
                 title: 'JSON 格式化',
-                desc: '在线校验、美化和压缩 JSON 数据，支持错误定位。',
-                url: 'tools/json.html',
-                tag: 'Dev'
+                desc: '开发必备：在线校验、美化和压缩 JSON 数据，支持错误定位。',
+                url: 'tools/json.html'
             },
             {
-                type: 'tool', category: 'tool',
+                category: 'text', type: 'tool',
+                title: '文本编码转换',
+                desc: 'URL Decode、Unicode、Hex、Base64 文本编码互转。',
+                url: 'tools/text-encoding.html'
+            },
+            {
+                category: 'text', type: 'tool',
                 title: '时间戳转换',
-                desc: 'Unix 时间戳与日期时间相互转换，精确到毫秒。',
-                url: 'tools/timestamp.html',
-                tag: 'Utility'
+                desc: 'Unix 时间戳与日期时间相互转换工具。',
+                url: 'tools/timestamp.html'
             },
             {
-                type: 'tool', category: 'tool',
-                title: 'Base64 转换',
-                desc: '图片转 Base64 代码，文本编码解码。',
-                url: 'tools/base64.html',
-                tag: 'Encoding'
+                category: 'text', type: 'dataset',
+                title: 'Hugging Face NLP',
+                desc: '全球最大的自然语言处理数据集中心，涵盖数千种语言。',
+                url: 'https://huggingface.co/datasets'
             },
             {
-                type: 'tool', category: 'tool',
-                title: '图片格式转换',
-                desc: 'JPG / PNG / WebP 格式纯本地互转。',
-                url: 'tools/image-convert.html',
-                tag: 'Image'
+                category: 'text', type: 'dataset',
+                title: 'Common Crawl',
+                desc: '开放式网络抓取数据库，是大语言模型预训练的核心数据源。',
+                url: 'https://commoncrawl.org/'
             },
 
-            // === 数据集导航 (示例数据) ===
+            // --- 2. 图像类 (Image) ---
             {
-                type: 'dataset', category: 'cv',
+                category: 'image', type: 'tool',
+                title: '图片格式转换',
+                desc: 'JPG / PNG / WebP / BMP 格式纯本地互转，保护隐私。',
+                url: 'tools/image-convert.html'
+            },
+            {
+                category: 'image', type: 'tool',
+                title: 'Base64 图片编码',
+                desc: '将图片文件转换为 Base64 代码，适合前端内嵌使用。',
+                url: 'tools/base64.html'
+            },
+            {
+                category: 'image', type: 'dataset',
                 title: 'ImageNet',
-                desc: '全球最著名的图像识别数据集，包含超过1400万张标注图片。',
-                url: 'https://www.image-net.org/',
-                tag: 'Vision'
+                desc: '计算机视觉领域的"Hello World"，包含 1400 万张标注图片。',
+                url: 'https://www.image-net.org/'
             },
             {
-                type: 'dataset', category: 'cv',
-                title: 'COCO Dataset',
-                desc: '微软发布的大型数据集，用于对象检测、分割和字幕生成。',
-                url: 'https://cocodataset.org/',
-                tag: 'Vision'
+                category: 'image', type: 'dataset',
+                title: 'Midjourney Gallery',
+                desc: '高质量 AI 生成图像展示与 Prompt 灵感库。',
+                url: 'https://www.midjourney.com/showcase'
+            },
+
+            // --- 3. 视频类 (Video) ---
+            {
+                category: 'video', type: 'dataset',
+                title: 'YouTube-8M',
+                desc: 'Google 发布的大规模视频数据集，包含 800 万个视频 ID。',
+                url: 'https://research.google.com/youtube8m/'
             },
             {
-                type: 'dataset', category: 'nlp',
-                title: 'Hugging Face Datasets',
-                desc: '目前最大的 NLP 数据集中心，涵盖数千种语言和任务。',
-                url: 'https://huggingface.co/datasets',
-                tag: 'NLP'
+                category: 'video', type: 'dataset',
+                title: 'Sora (OpenAI)',
+                desc: 'OpenAI 发布的文本生成视频模型，代表当前视频生成的最高水平。',
+                url: 'https://openai.com/sora'
+            },
+            
+            // --- 4. 音频类 (Audio) ---
+            {
+                category: 'audio', type: 'dataset',
+                title: 'AudioSet',
+                desc: 'Google 发布的音频事件数据集，包含 632 个音频类别。',
+                url: 'https://research.google.com/audioset/'
             },
             {
-                type: 'dataset', category: 'nlp',
-                title: 'Common Crawl',
-                desc: '提供互联网的开放式网络抓取数据，大模型训练必备。',
-                url: 'https://commoncrawl.org/',
-                tag: 'Text'
+                category: 'audio', type: 'dataset',
+                title: 'LibriSpeech',
+                desc: '大型有声读物数据集，常用于语音识别 (ASR) 模型训练。',
+                url: 'https://www.openslr.org/12'
+            },
+
+            // --- 5. 多模态 (Multimodal) ---
+            {
+                category: 'multi', type: 'dataset',
+                title: 'LAION-5B',
+                desc: '目前最大的公开图文对数据集 (50亿对)，Stable Diffusion 的训练基石。',
+                url: 'https://laion.ai/'
             },
             {
-                type: 'dataset', category: 'finance',
-                title: 'Yahoo Finance API',
-                desc: '最常用的免费金融市场数据源，包括股票、加密货币等。',
-                url: 'https://finance.yahoo.com/',
-                tag: 'Finance'
+                category: 'multi', type: 'tool',
+                title: 'ChatGPT (GPT-4)',
+                desc: '最强大多模态助手，支持文本、代码、图片识别与绘图 (DALL·E 3)。',
+                url: 'https://chat.openai.com/'
             },
             {
-                type: 'dataset', category: 'finance',
-                title: 'Tushare',
-                desc: '免费、开源的 Python 财经数据接口包，覆盖中国股市。',
-                url: 'https://tushare.pro/',
-                tag: 'China'
-            },
-            {
-                type: 'dataset', category: 'fun',
-                title: 'Kaggle Datasets',
-                desc: '全球最大的数据科学社区，海量有趣的数据集（如泰坦尼克号）。',
-                url: 'https://www.kaggle.com/datasets',
-                tag: 'Hub'
-            },
-            {
-                type: 'dataset', category: 'fun',
-                title: 'Awesome Public Datasets',
-                desc: 'GitHub 上最全的公开数据集整理列表。',
-                url: 'https://github.com/awesomedata/awesome-public-datasets',
-                tag: 'List'
+                category: 'multi', type: 'tool',
+                title: 'Google Gemini',
+                desc: 'Google 原生多模态模型，在视频理解和长文本处理上表现优异。',
+                url: 'https://gemini.google.com/'
             }
         ];
 
         // --- 渲染逻辑 ---
         const grid = document.getElementById('contentGrid');
         const searchInput = document.getElementById('searchInput');
-        let currentFilter = 'all';
 
         function render(data) {
             grid.innerHTML = '';
             data.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'res-card';
-                // 根据类型显示不同颜色或图标
-                const icon = item.type === 'tool' ? '🛠️' : '💾';
+                
+                // 根据类型显示不同标签
+                const badgeClass = item.type === 'tool' ? 'badge-tool' : 'badge-data';
+                const badgeText = item.type === 'tool' ? '🔧 在线工具' : '💾 数据/资源';
                 const btnText = item.type === 'tool' ? '立即使用' : '访问官网';
                 
                 card.innerHTML = `
                     <div class="res-top">
-                        <span class="res-type">${icon} ${item.tag}</span>
+                        <span class="res-badge ${badgeClass}">${badgeText}</span>
                     </div>
-                    <a href="${item.url}" target="${item.type === 'tool' ? '_self' : '_blank'}" class="res-title">${item.title}</a>
+                    <a href="${item.url}" target="${item.type === 'tool' ? '_self' : '_blank'}" class="res-title">
+                        ${item.title}
+                    </a>
                     <p class="res-desc">${item.desc}</p>
                     <div class="res-meta">
-                        <span>${item.category.toUpperCase()}</span>
+                        <span style="text-transform: capitalize;">#${item.category}</span>
                         <a href="${item.url}" target="${item.type === 'tool' ? '_self' : '_blank'}" class="res-link">${btnText} &rarr;</a>
                     </div>
                 `;
@@ -209,7 +237,6 @@
 
         // 过滤功能
         function filterData(category) {
-            currentFilter = category;
             // 更新按钮状态
             document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
@@ -227,12 +254,10 @@
             const keyword = e.target.value.toLowerCase();
             const filtered = resources.filter(item => 
                 item.title.toLowerCase().includes(keyword) || 
-                item.desc.toLowerCase().includes(keyword) ||
-                item.tag.toLowerCase().includes(keyword)
+                item.desc.toLowerCase().includes(keyword)
             );
             render(filtered);
         });
-
     </script>
 </body>
 </html>
