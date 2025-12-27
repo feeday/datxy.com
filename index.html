@@ -40,39 +40,33 @@
 
         a { text-decoration: none; color: inherit; transition: 0.2s; }
 
-        /* ================== 2. 悬浮胶囊导航 (修改版：带遮罩) ================== */
+        /* ================== 2. 悬浮胶囊导航 ================== */
         .sticky-header-wrapper {
             position: sticky; 
-            top: 0; /* 修改：贴顶，为了挡住最上方的缝隙 */
+            top: 0; 
             z-index: 999;
             width: 100%; 
             display: flex; 
             justify-content: center;
             
-            /* 修改：利用 Padding 实现视觉上的“悬浮距离” */
-            padding-top: 20px; 
-            padding-bottom: 50px; /* 增加底部留白，防止内容贴太紧 */
-            padding-left: 20px;
-            padding-right: 20px;
+            padding: 20px;
+            margin-bottom: 30px; 
             
-            /* 新增：深色模糊背景，用于遮挡下方滚动的文字 */
             background: rgba(2, 6, 23, 0.95); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             
-            /* 可选：加一个渐变遮罩让底部边缘柔和一点，如果不想要可以去掉 */
-            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+            pointer-events: none; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .sticky-inner {
-            /* 胶囊本体 */
-            background: rgba(30, 41, 59, 0.6); /* 稍微降低透明度，因为父级已有背景 */
+            background: rgba(30, 41, 59, 0.6); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             
             border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: var(--radius-pill);          
+            border-radius: var(--radius-pill);           
             box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5); 
             
             padding: 8px 12px; 
@@ -82,6 +76,8 @@
             
             width: auto;
             max-width: 100%; 
+
+            pointer-events: auto; 
         }
 
         /* 搜索框 */
@@ -108,13 +104,30 @@
             font-size: 0.8rem; opacity: 0.4; pointer-events: none; filter: grayscale(100%);
         }
 
+        /* 修复后的清除按钮样式 */
         .search-clear {
-            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-            width: 18px; height: 18px; line-height: 18px; text-align: center;
-            border-radius: 50%; background: rgba(255,255,255,0.2);
-            color: #000; font-size: 12px; cursor: pointer;
+            position: absolute; 
+            right: 6px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            
+            /* 加大点击区域 */
+            width: 30px; 
+            height: 30px; 
+            line-height: 30px; 
+            text-align: center;
+            
+            border-radius: 50%; 
+            background: rgba(255,255,255,0.15); 
+            color: #fff; 
+            font-size: 14px; 
+            cursor: pointer;
             display: none;
+            touch-action: manipulation;
+            transition: background 0.2s;
         }
+        .search-clear:hover { background: rgba(255,255,255,0.3); }
+        .search-clear:active { background: rgba(255,255,255,0.5); }
 
         .search-input:focus {
             background: rgba(0,0,0,0.5);
@@ -129,24 +142,59 @@
             margin: 0 4px;
         }
 
-        /* 分类按钮 */
+        /* ================== ✨ 玻璃滑块分类导航 ✨ ================== */
         .filter-bar {
             display: flex; gap: 4px; align-items: center;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* 滑块本体 */
+        .filter-glider {
+            position: absolute;
+            top: 4px; 
+            left: 0;
+            height: calc(100% - 8px); 
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            border-radius: var(--radius-pill);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1; 
+            pointer-events: none;
+            width: 0; 
         }
 
         .tag-btn {
-            background: transparent; border: none;
+            background: transparent; 
+            border: none;
             color: var(--text-secondary); 
-            padding: 8px 16px; 
+            padding: 6px 16px; 
             border-radius: var(--radius-pill);
-            font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: color 0.3s;
             white-space: nowrap;
+            position: relative;
+            z-index: 2; 
         }
+
         .tag-btn.active { 
-            background: #fff; color: #020617; font-weight: 600;
-            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+            color: #fff; 
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            background: transparent; 
+            box-shadow: none;
         }
-        .tag-btn:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
+        
+        .tag-btn:hover:not(.active) { color: #fff; }
+
 
         /* ================== 3. 资源网格 ================== */
         .main-content { padding: 0 2rem; flex: 1; }
@@ -154,7 +202,6 @@
         .resource-grid {
             display: grid; gap: 20px; max-width: 1400px; margin: 0 auto;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            /* 移除之前的 margin-top，因为 header wrapper 现在自带 padding-bottom */
         }
 
         .card {
@@ -231,8 +278,7 @@
 
         /* ================== 5. 📱 手机端适配 ================== */
         @media (max-width: 768px) {
-            /* 手机端也要这效果，保持 wrapper 贴顶 */
-            .sticky-header-wrapper { padding: 10px; top: 0; padding-top: 10px; }
+            .sticky-header-wrapper { padding: 10px; top: 0; padding-top: 10px; padding-bottom: 20px; margin-bottom: 20px; }
             
             .sticky-inner { 
                 flex-direction: column; width: 100%; 
@@ -250,8 +296,6 @@
                 width: 100%; 
                 overflow-x: auto; justify-content: flex-start;
                 -webkit-overflow-scrolling: touch; scrollbar-width: none; 
-                mask-image: linear-gradient(to right, black 90%, transparent 100%);
-                -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
             }
             .filter-bar::-webkit-scrollbar { display: none; }
             
@@ -268,20 +312,22 @@
         <div class="sticky-inner">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchInput" placeholder="搜索资源...">
-                <span class="search-clear" id="searchClear" onclick="clearSearch()">✕</span>
+                <span class="search-clear" id="searchClear" onmousedown="event.preventDefault()" onclick="clearSearch()">✕</span>
             </div>
             
             <div class="divider"></div>
             
             <div class="filter-bar">
-                <button class="tag-btn active" onclick="filterData('all')">全部</button>
-                <button class="tag-btn" onclick="filterData('tool')">工具</button>
-                <button class="tag-btn" onclick="filterData('model')">模型</button>
-                <button class="tag-btn" onclick="filterData('news')">资讯</button>
-                <button class="tag-btn" onclick="filterData('image')">图像</button>
-                <button class="tag-btn" onclick="filterData('video')">视频</button>
-                <button class="tag-btn" onclick="filterData('audio')">音频</button>
-                <button class="tag-btn" onclick="filterData('multi')">多模态</button>
+                <div class="filter-glider" id="filterGlider"></div>
+
+                <button class="tag-btn active" onclick="filterData('all', this)">全部</button>
+                <button class="tag-btn" onclick="filterData('tool', this)">工具</button>
+                <button class="tag-btn" onclick="filterData('model', this)">模型</button>
+                <button class="tag-btn" onclick="filterData('news', this)">资讯</button>
+                <button class="tag-btn" onclick="filterData('image', this)">图像</button>
+                <button class="tag-btn" onclick="filterData('video', this)">视频</button>
+                <button class="tag-btn" onclick="filterData('audio', this)">音频</button>
+                <button class="tag-btn" onclick="filterData('multi', this)">多模态</button>
             </div>
         </div>
     </div>
@@ -357,6 +403,10 @@
                 if(item.cat === 'tool') tagName = '工具';
                 if(item.cat === 'model') tagName = '模型';
                 if(item.cat === 'news') tagName = '资讯';
+                if(item.cat === 'image') tagName = '图像';
+                if(item.cat === 'video') tagName = '视频';
+                if(item.cat === 'audio') tagName = '音频';
+                if(item.cat === 'multi') tagName = '多模态';
 
                 const isTool = item.cat === 'tool';
                 const target = isTool ? '_self' : '_blank';
@@ -377,14 +427,38 @@
 
         render(resources);
 
-        function filterData(type) {
-            document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+        // ================== 滑块逻辑 ==================
+        const glider = document.getElementById('filterGlider');
+        
+        function moveGlider(targetBtn) {
+            if(!targetBtn) return;
+            glider.style.width = targetBtn.offsetWidth + 'px';
+            glider.style.transform = `translateX(${targetBtn.offsetLeft}px)`;
+        }
+
+        function filterData(type, btnElement) {
+            if(btnElement) {
+                document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+                moveGlider(btnElement);
+            }
+
             if(type === 'all') render(resources);
             else render(resources.filter(i => i.cat === type));
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
+        window.addEventListener('load', () => {
+            const activeBtn = document.querySelector('.tag-btn.active');
+            if(activeBtn) moveGlider(activeBtn);
+        });
+
+        window.addEventListener('resize', () => {
+            const activeBtn = document.querySelector('.tag-btn.active');
+            if(activeBtn) moveGlider(activeBtn);
+        });
+
+        // ================== 搜索与清除逻辑 ==================
         searchInput.addEventListener('input', (e) => {
             const val = e.target.value;
             searchClear.style.display = val.length > 0 ? 'block' : 'none';
@@ -396,7 +470,7 @@
             searchInput.value = '';
             searchClear.style.display = 'none';
             render(resources);
-            searchInput.focus();
+            searchInput.focus(); // 重新让输入框获得焦点
         }
 
         const fab = document.getElementById('fabTop');
