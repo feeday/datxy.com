@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Data Resources</title>
+    <title>DatXY</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -48,14 +48,11 @@
             width: 100%; 
             display: flex; 
             justify-content: center;
-            
             padding: 20px;
             margin-bottom: 30px; 
-            
             background: rgba(2, 6, 23, 0.95); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            
             pointer-events: none; 
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
@@ -64,19 +61,15 @@
             background: rgba(30, 41, 59, 0.6); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            
             border: 1px solid rgba(255, 255, 255, 0.1); 
             border-radius: var(--radius-pill);           
             box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5); 
-            
             padding: 8px 12px; 
             display: flex; 
             align-items: center; 
             gap: 12px;
-            
             width: auto;
             max-width: 100%; 
-
             pointer-events: auto; 
         }
 
@@ -104,27 +97,12 @@
             font-size: 0.8rem; opacity: 0.4; pointer-events: none; filter: grayscale(100%);
         }
 
-        /* 修复后的清除按钮样式 */
         .search-clear {
-            position: absolute; 
-            right: 6px; 
-            top: 50%; 
-            transform: translateY(-50%);
-            
-            /* 加大点击区域 */
-            width: 30px; 
-            height: 30px; 
-            line-height: 30px; 
-            text-align: center;
-            
-            border-radius: 50%; 
-            background: rgba(255,255,255,0.15); 
-            color: #fff; 
-            font-size: 14px; 
-            cursor: pointer;
-            display: none;
-            touch-action: manipulation;
-            transition: background 0.2s;
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            width: 30px; height: 30px; line-height: 30px; text-align: center;
+            border-radius: 50%; background: rgba(255,255,255,0.15); 
+            color: #fff; font-size: 14px; cursor: pointer;
+            display: none; touch-action: manipulation; transition: background 0.2s;
         }
         .search-clear:hover { background: rgba(255,255,255,0.3); }
         .search-clear:active { background: rgba(255,255,255,0.5); }
@@ -135,64 +113,39 @@
             box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
         }
 
-        /* 分割线 */
-        .divider {
-            width: 1px; height: 20px; 
-            background: rgba(255,255,255,0.1); 
-            margin: 0 4px;
-        }
+        .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 4px; }
 
-        /* ================== ✨ 玻璃滑块分类导航 ✨ ================== */
+        /* ================== 导航栏 ================== */
         .filter-bar {
-            display: flex; gap: 4px; align-items: center;
-            position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 4px;
-            border-radius: var(--radius-pill);
-            border: 1px solid rgba(255,255,255,0.05);
+            display: flex; gap: 4px; align-items: center; position: relative;
+            background: rgba(0, 0, 0, 0.2); padding: 4px;
+            border-radius: var(--radius-pill); border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* 滑块本体 */
         .filter-glider {
-            position: absolute;
-            top: 4px; 
-            left: 0;
+            position: absolute; top: 4px; left: 0;
             height: calc(100% - 8px); 
             background: rgba(255, 255, 255, 0.1); 
             border: 1px solid rgba(255, 255, 255, 0.15); 
             border-radius: var(--radius-pill);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            z-index: 1; 
-            pointer-events: none;
-            width: 0; 
+            z-index: 1; pointer-events: none; width: 0; 
         }
 
         .tag-btn {
-            background: transparent; 
-            border: none;
-            color: var(--text-secondary); 
-            padding: 6px 16px; 
-            border-radius: var(--radius-pill);
-            font-size: 0.9rem; 
-            font-weight: 500; 
-            cursor: pointer; 
-            transition: color 0.3s;
-            white-space: nowrap;
-            position: relative;
-            z-index: 2; 
+            background: transparent; border: none; color: var(--text-secondary); 
+            padding: 6px 16px; border-radius: var(--radius-pill);
+            font-size: 0.9rem; font-weight: 500; cursor: pointer; 
+            transition: color 0.3s; white-space: nowrap; position: relative; z-index: 2; 
         }
 
         .tag-btn.active { 
-            color: #fff; 
-            font-weight: 600;
+            color: #fff; font-weight: 600;
             text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            background: transparent; 
-            box-shadow: none;
+            background: transparent; box-shadow: none;
         }
-        
         .tag-btn:hover:not(.active) { color: #fff; }
 
 
@@ -212,19 +165,22 @@
             position: relative; display: flex; flex-direction: column; overflow: hidden;
         }
         
-        .card:hover { 
+        /* 👇 修改：除了 :hover 外，新增 .active-focus 类 
+           这样键盘选中时，样式和鼠标悬停一模一样
+        */
+        .card:hover, .card.active-focus { 
             transform: translateY(-5px); border-color: var(--border-hover);
             background: rgba(30, 41, 59, 0.8);
             box-shadow: 0 20px 40px -10px rgba(0,0,0,0.6); 
         }
 
-        /* 分类颜色系统 */
-        .card:has(.tag-tool):hover  { border-color: rgba(52, 211, 153, 0.4); }
-        .card:has(.tag-image):hover { border-color: rgba(244, 114, 182, 0.4); }
-        .card:has(.tag-video):hover { border-color: rgba(167, 139, 250, 0.4); }
-        .card:has(.tag-model):hover { border-color: rgba(129, 140, 248, 0.4); }
-        .card:has(.tag-news):hover  { border-color: rgba(251, 146, 60, 0.4); }
-        .card:has(.tag-audio):hover { border-color: rgba(96, 165, 250, 0.4); }
+        /* 颜色系统适配键盘选中 */
+        .card:has(.tag-tool):hover,  .card.active-focus:has(.tag-tool)  { border-color: rgba(52, 211, 153, 0.4); }
+        .card:has(.tag-image):hover, .card.active-focus:has(.tag-image) { border-color: rgba(244, 114, 182, 0.4); }
+        .card:has(.tag-video):hover, .card.active-focus:has(.tag-video) { border-color: rgba(167, 139, 250, 0.4); }
+        .card:has(.tag-model):hover, .card.active-focus:has(.tag-model) { border-color: rgba(129, 140, 248, 0.4); }
+        .card:has(.tag-news):hover,  .card.active-focus:has(.tag-news)  { border-color: rgba(251, 146, 60, 0.4); }
+        .card:has(.tag-audio):hover, .card.active-focus:has(.tag-audio) { border-color: rgba(96, 165, 250, 0.4); }
 
         .card-tag {
             position: absolute; top: 20px; right: 20px;
@@ -249,7 +205,7 @@
         }
         .card-link:hover { background: var(--text-primary); color: #000; border-color: #fff; }
 
-        /* ================== 4. 底部 Footer ================== */
+        /* ================== 4. Footer ================== */
         .site-footer {
             margin-top: 6rem; padding: 4rem 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -276,31 +232,15 @@
         .fab-top:hover { border-color: var(--text-secondary); color: #fff; }
         .fab-top.visible { opacity: 1; transform: translateY(0); }
 
-        /* ================== 5. 📱 手机端适配 ================== */
         @media (max-width: 768px) {
             .sticky-header-wrapper { padding: 10px; top: 0; padding-top: 10px; padding-bottom: 20px; margin-bottom: 20px; }
-            
-            .sticky-inner { 
-                flex-direction: column; width: 100%; 
-                border-radius: 20px; 
-                padding: 12px 14px; gap: 10px; 
-            }
-            
-            .search-wrapper { width: 100%; } 
-            .search-wrapper:focus-within { width: 100%; }
+            .sticky-inner { flex-direction: column; width: 100%; border-radius: 20px; padding: 12px 14px; gap: 10px; }
+            .search-wrapper, .search-wrapper:focus-within { width: 100%; }
             .search-input { font-size: 16px; padding: 10px 34px 10px 40px; }
-            
             .divider { display: none; } 
-
-            .filter-bar {
-                width: 100%; 
-                overflow-x: auto; justify-content: flex-start;
-                -webkit-overflow-scrolling: touch; scrollbar-width: none; 
-            }
+            .filter-bar { width: 100%; overflow-x: auto; justify-content: flex-start; scrollbar-width: none; }
             .filter-bar::-webkit-scrollbar { display: none; }
-            
             .tag-btn { padding: 6px 14px; font-size: 0.85rem; }
-            
             .main-content { padding: 0 1rem; }
             .fab-top { width: 40px; height: 40px; bottom: 20px; right: 20px; }
         }
@@ -341,16 +281,12 @@
             <div class="copyright">
                 <p>&copy; 2025 datxy.com &nbsp;·&nbsp; Build for Builders</p>
             </div>
-            
             <div class="footer-links">
                 <a href="https://github.com/feeday/datxy.com" target="_blank" class="footer-link-item">
-                    <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    GitHub
+                    <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg> GitHub
                 </a>
-
                 <a href="https://pages.cloudflare.com/" target="_blank" class="footer-link-item">
-                    <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.998 8.014L5.358 13.91h3.918l-1.057 5.766 8.649-11.338H11.23l1.823-5.326L9.998 8.014zm-4.39 1.764L1.76 14.54a3.868 3.868 0 0 0 3.863 3.87h1.01c.21 1.58 1.56 2.8 3.19 2.8h7.957a4.67 4.67 0 0 0 1.516-9.088c-.015-.173-.023-.35-.023-.527a6.62 6.62 0 0 0-6.619-6.619c-2.923 0-5.412 1.89-6.289 4.526a3.882 3.882 0 0 0-.765-.077z"/></svg>
-                    Cloudflare
+                    <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.998 8.014L5.358 13.91h3.918l-1.057 5.766 8.649-11.338H11.23l1.823-5.326L9.998 8.014zm-4.39 1.764L1.76 14.54a3.868 3.868 0 0 0 3.863 3.87h1.01c.21 1.58 1.56 2.8 3.19 2.8h7.957a4.67 4.67 0 0 0 1.516-9.088c-.015-.173-.023-.35-.023-.527a6.62 6.62 0 0 0-6.619-6.619c-2.923 0-5.412 1.89-6.289 4.526a3.882 3.882 0 0 0-.765-.077z"/></svg> Cloudflare
                 </a>
             </div>
         </div>
@@ -382,8 +318,15 @@
         const searchInput = document.getElementById('searchInput');
         const searchClear = document.getElementById('searchClear');
 
+        // 全局变量，追踪当前显示的卡片和选中的索引
+        let visibleCards = [];
+        let selectedCardIndex = -1;
+
         function render(list) {
             grid.innerHTML = '';
+            visibleCards = []; // 清空之前的记录
+            selectedCardIndex = -1; // 重置选中状态
+
             list.forEach((item, index) => {
                 const el = document.createElement('div');
                 el.className = 'card';
@@ -408,16 +351,22 @@
                 if(item.cat === 'audio') tagName = '音频';
                 if(item.cat === 'multi') tagName = '多模态';
 
-                const isTool = item.cat === 'tool';
-                const target = isTool ? '_self' : '_blank';
+                const target = '_blank';
                 
                 el.innerHTML = `
                     <span class="card-tag ${tagClass}">${tagName}</span>
                     <div class="card-title">${item.title}</div>
                     <div class="card-desc">${item.desc}</div>
-                    <a href="${item.url}" target="${target}" class="card-link">${isTool ? '立即使用' : '访问官网'} →</a>
+                    <a href="${item.url}" target="${target}" class="card-link">${item.cat === 'tool' ? '立即使用' : '访问官网'} →</a>
                 `;
+                
+                // 鼠标移入时，更新 JS 选中的索引，避免键盘操作时跳跃
+                el.addEventListener('mouseenter', () => {
+                    updateSelection(index);
+                });
+
                 grid.appendChild(el);
+                visibleCards.push(el); // 记录 DOM 元素
             });
         }
         
@@ -429,34 +378,115 @@
 
         // ================== 滑块逻辑 ==================
         const glider = document.getElementById('filterGlider');
-        
         function moveGlider(targetBtn) {
             if(!targetBtn) return;
             glider.style.width = targetBtn.offsetWidth + 'px';
             glider.style.transform = `translateX(${targetBtn.offsetLeft}px)`;
         }
-
         function filterData(type, btnElement) {
             if(btnElement) {
                 document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
                 btnElement.classList.add('active');
                 moveGlider(btnElement);
             }
-
             if(type === 'all') render(resources);
             else render(resources.filter(i => i.cat === type));
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
+        window.addEventListener('load', () => { const activeBtn = document.querySelector('.tag-btn.active'); if(activeBtn) moveGlider(activeBtn); });
+        window.addEventListener('resize', () => { const activeBtn = document.querySelector('.tag-btn.active'); if(activeBtn) moveGlider(activeBtn); });
 
-        window.addEventListener('load', () => {
-            const activeBtn = document.querySelector('.tag-btn.active');
-            if(activeBtn) moveGlider(activeBtn);
+
+        // ================== 🎹 全键盘导航逻辑 (核心修改) ==================
+        
+        // 辅助函数：更新选中状态
+        function updateSelection(index) {
+            // 移除所有卡片的高亮
+            visibleCards.forEach(c => c.classList.remove('active-focus'));
+            
+            // 范围检查
+            if (index >= 0 && index < visibleCards.length) {
+                selectedCardIndex = index;
+                const card = visibleCards[index];
+                card.classList.add('active-focus');
+                
+                // 只有键盘操作时才滚动（简单判断：如果是由 mouseenter 触发的则不滚动）
+                // 但为了简化，这里我们可以只在 keydown 里调用 scrollIntoView
+            } else {
+                selectedCardIndex = -1;
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            // 1. 如果正在搜索框输入，允许左右键移动光标，不允许切换分类/卡片
+            if (document.activeElement === searchInput) {
+                if (e.key === 'Enter') {
+                    // 在搜索框按回车，如果有结果，选中第一个
+                    if (visibleCards.length > 0) {
+                        searchInput.blur(); // 退出输入框
+                        updateSelection(0); // 选中第一个
+                    }
+                }
+                return;
+            }
+
+            // 2. 左右键：切换顶部分类
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault(); // 防止页面横向滚动
+                const buttons = Array.from(document.querySelectorAll('.tag-btn'));
+                const activeIndex = buttons.findIndex(btn => btn.classList.contains('active'));
+                let newIndex = activeIndex;
+
+                if (e.key === 'ArrowRight') newIndex = (activeIndex + 1) % buttons.length;
+                else if (e.key === 'ArrowLeft') newIndex = (activeIndex - 1 + buttons.length) % buttons.length;
+
+                buttons[newIndex].click();
+                return;
+            }
+
+            // 3. 上下键：选择信息流卡片
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault(); // 防止页面滚动
+                
+                if (visibleCards.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    // 如果还没选中，选中第一个；否则下一个
+                    if (selectedCardIndex < visibleCards.length - 1) {
+                        selectedCardIndex++;
+                    } else {
+                        // 到底了，可以循环回到顶部，或者停住。这里选择停住
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    if (selectedCardIndex > 0) {
+                        selectedCardIndex--;
+                    } else {
+                        // 到顶了
+                    }
+                }
+
+                updateSelection(selectedCardIndex);
+                
+                // 确保选中的卡片在视野内
+                const card = visibleCards[selectedCardIndex];
+                if (card) {
+                    card.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+                return;
+            }
+
+            // 4. 回车键：打开当前选中卡片的链接
+            if (e.key === 'Enter') {
+                if (selectedCardIndex !== -1 && visibleCards[selectedCardIndex]) {
+                    const link = visibleCards[selectedCardIndex].querySelector('a');
+                    if (link) {
+                        // 模拟点击，触发 target="_blank"
+                        link.click();
+                    }
+                }
+            }
         });
 
-        window.addEventListener('resize', () => {
-            const activeBtn = document.querySelector('.tag-btn.active');
-            if(activeBtn) moveGlider(activeBtn);
-        });
 
         // ================== 搜索与清除逻辑 ==================
         searchInput.addEventListener('input', (e) => {
@@ -470,7 +500,7 @@
             searchInput.value = '';
             searchClear.style.display = 'none';
             render(resources);
-            searchInput.focus(); // 重新让输入框获得焦点
+            searchInput.focus();
         }
 
         const fab = document.getElementById('fabTop');
