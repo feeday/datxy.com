@@ -10,7 +10,7 @@
         /* ================== 核心变量 ================== */
         :root {
             --bg-dark: #020617;
-            --bg-card: rgba(30, 41, 59, 0.4); /* 更通透的卡片背景 */
+            --bg-card: rgba(30, 41, 59, 0.4);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --accent: #38bdf8;
@@ -22,30 +22,29 @@
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-dark);
+            /* 1. 移除 Canvas，改为静态背景 */
+            background: radial-gradient(circle at top center, #1e293b 0%, #020617 60%, #020617 100%);
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-        /* ================== 顶部导航 ================== */
+        /* ================== 顶部导航 (Logo) ================== */
+        /* 注意：当吸顶条上来时，这个导航会被覆盖，符合逻辑 */
         .navbar {
-            position: fixed; top: 0; left: 0; right: 0;
-            padding: 1.2rem 2rem;
+            position: absolute; top: 0; left: 0; right: 0;
+            padding: 1.5rem 2rem;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000; /* 确保在最顶层 */
-            background: linear-gradient(to bottom, rgba(2,6,23,0.8) 0%, transparent 100%);
-            pointer-events: none; /* 让鼠标穿透背景 */
+            z-index: 10;
         }
-        .navbar a { pointer-events: auto; }
 
         .logo { 
             font-family: 'Courier New', monospace;
             font-size: 1.5rem; font-weight: 800; letter-spacing: -1px;
             color: #fff; display: flex; align-items: center; gap: 8px;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
         }
         .logo::before {
             content: ''; width: 8px; height: 8px; background: var(--accent);
@@ -53,122 +52,88 @@
         }
 
         .nav-link { 
-            font-size: 0.85rem; color: rgba(255,255,255,0.8); 
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 16px; border-radius: 50px;
-            background: rgba(0,0,0,0.3); backdrop-filter: blur(5px);
+            font-size: 0.85rem; color: rgba(255,255,255,0.6); 
             transition: 0.3s;
         }
-        .nav-link:hover { color: #fff; border-color: var(--accent); background: rgba(56,189,248,0.15); }
+        .nav-link:hover { color: #fff; }
 
-        /* ================== Hero 全屏视觉区 ================== */
+        /* ================== Hero 区域 (只留文字) ================== */
         .hero-section {
             position: relative;
-            min-height: 85vh; /* 稍微减小高度，让用户能看到下方有内容 */
+            /* 减小高度，让搜索框更快进入视野 */
+            padding: 8rem 1rem 4rem 1rem; 
             display: flex; flex-direction: column; 
-            justify-content: center; align-items: center;
-            text-align: center;
-            padding: 0 1rem;
-            overflow: hidden;
+            align-items: center; text-align: center;
         }
-
-        #bgCanvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
-        }
-
-        .hero-content { z-index: 2; width: 100%; max-width: 800px; pointer-events: none; }
-        .hero-content > * { pointer-events: auto; }
 
         .hero-title {
-            font-size: 4rem; font-weight: 900; margin-bottom: 1.2rem;
+            font-size: 3.5rem; font-weight: 900; margin-bottom: 1rem;
             letter-spacing: -2px; line-height: 1.1;
             background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 20px 50px rgba(56, 189, 248, 0.2);
         }
 
-        .hero-desc { color: var(--text-sub); font-size: 1.2rem; margin-bottom: 3.5rem; font-weight: 300; }
+        .hero-desc { color: var(--text-sub); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
 
-        .search-wrapper { position: relative; max-width: 540px; margin: 0 auto; width: 100%; }
-        .search-input {
-            width: 100%; padding: 18px 28px; border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(15, 23, 42, 0.6);
-            color: #fff; font-size: 1.05rem;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .search-input:focus {
-            border-color: var(--accent); 
-            background: rgba(15, 23, 42, 0.9);
-            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15), 0 20px 40px rgba(0,0,0,0.4);
-            transform: scale(1.02);
-        }
-
-        .scroll-indicator {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            color: rgba(255,255,255,0.3); font-size: 1.5rem;
-            animation: bounce 2s infinite; cursor: pointer; z-index: 5;
-            padding: 10px;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-            40% {transform: translateX(-50%) translateY(-10px);}
-            60% {transform: translateX(-50%) translateY(-5px);}
-        }
-
-        /* ================== 主内容区 ================== */
-        .main-content {
-            position: relative;
-            background: var(--bg-dark);
-            min-height: 100vh;
-            padding: 0 2rem 6rem 2rem; 
-            border-top: 1px solid var(--border);
-            z-index: 10;
-        }
-
-        /* ✨ 优化版分类栏 (悬浮岛设计) ✨ */
-        .filter-container {
-            position: sticky; top: 1rem; z-index: 900;
-            display: flex; justify-content: center;
-            margin-bottom: 2.5rem;
-            pointer-events: none; /* 让左右两侧空白处不阻挡点击 */
-        }
-
-        .filter-bar {
-            pointer-events: auto;
-            display: flex; gap: 8px; flex-wrap: wrap;
-            justify-content: center;
+        /* ================== ✨ 核心修改：吸顶容器 (搜索+分类) ✨ ================== */
+        /* 这个容器包裹了 搜索框 和 分类栏 */
+        .sticky-header-wrapper {
+            position: sticky;
+            top: 0; /* 吸附顶部 */
+            z-index: 999; /* 确保层级最高 */
             
-            /* 玻璃态悬浮条 */
-            background: rgba(15, 23, 42, 0.7);
+            /* 吸顶时的背景样式 */
+            background: rgba(2, 6, 23, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             
-            padding: 8px 12px;
-            border-radius: 16px; /* 稍微圆角 */
+            padding: 1rem 0;
             transition: all 0.3s ease;
+        }
+
+        .sticky-inner {
+            max-width: 1400px; margin: 0 auto;
+            padding: 0 2rem;
+            display: flex; flex-direction: column; gap: 1rem; align-items: center;
+        }
+
+        /* 搜索框样式调整 */
+        .search-wrapper { width: 100%; max-width: 500px; }
+        .search-input {
+            width: 100%; padding: 14px 24px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(30, 41, 59, 0.6);
+            color: #fff; font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            border-color: var(--accent); background: rgba(30, 41, 59, 0.9);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+
+        /* 分类栏样式 */
+        .filter-bar {
+            display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
         }
 
         .tag-btn {
             background: transparent; border: 1px solid transparent;
-            color: var(--text-sub); padding: 8px 18px; border-radius: 10px;
-            font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.3s;
+            color: var(--text-sub); padding: 6px 16px; border-radius: 8px;
+            font-size: 0.9rem; cursor: pointer; transition: 0.3s;
         }
-        .tag-btn:hover {
-            color: #fff; background: rgba(255,255,255,0.05);
-        }
+        .tag-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
         .tag-btn.active {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent);
-            border-color: rgba(56, 189, 248, 0.2);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+            background: rgba(56, 189, 248, 0.15); color: var(--accent);
+            border-color: rgba(56, 189, 248, 0.2); font-weight: 600;
+        }
+
+        /* ================== 主内容区 ================== */
+        .main-content {
+            padding: 2rem; 
+            min-height: 80vh;
         }
 
         /* 资源网格 */
@@ -177,148 +142,84 @@
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         }
 
-        /* 优化版卡片 */
         .card {
             background: var(--bg-card); 
             border: 1px solid var(--border);
-            border-radius: var(--card-radius); padding: 28px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            position: relative;
-            display: flex; flex-direction: column; /* 关键：垂直布局 */
-            overflow: hidden;
+            border-radius: var(--card-radius); padding: 24px;
+            transition: all 0.3s; position: relative;
+            display: flex; flex-direction: column;
         }
-        
-        /* 悬停效果：根据不同标签，高亮边框颜色 */
-        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); background: rgba(30, 41, 59, 0.8); }
-        
-        .card:has(.tag-tool):hover { border-color: rgba(52, 211, 153, 0.5); }
-        .card:has(.tag-image):hover { border-color: rgba(244, 114, 182, 0.5); }
-        .card:has(.tag-video):hover { border-color: rgba(167, 139, 250, 0.5); }
-        .card:has(.tag-audio):hover { border-color: rgba(96, 165, 250, 0.5); }
-        .card:has(.tag-multi):hover { border-color: rgba(251, 191, 36, 0.5); }
+        .card:hover { transform: translateY(-5px); background: rgba(30, 41, 59, 0.8); border-color: rgba(255,255,255,0.15); }
 
         .card-tag {
             position: absolute; top: 24px; right: 24px;
-            font-size: 0.7rem; font-weight: 700; 
-            padding: 4px 10px; border-radius: 6px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.05);
-            letter-spacing: 0.5px;
-        }
-
-        /* 标签颜色定义 */
-        .tag-tool { color: #34d399; }
-        .tag-image { color: #f472b6; }
-        .tag-video { color: #a78bfa; }
-        .tag-audio { color: #60a5fa; }
-        .tag-text  { color: #e5e7eb; }
-        .tag-multi { color: #fbbf24; }
-        
-        .card-title { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 12px; margin-right: 50px; }
-        .card-desc { 
-            font-size: 0.95rem; color: var(--text-sub); line-height: 1.7; 
-            margin-bottom: 24px; 
-            flex-grow: 1; /* 关键：撑开中间空间，把按钮顶到底部 */
+            font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);
         }
         
+        .tag-tool { color: #34d399; } .tag-image { color: #f472b6; }
+        .tag-video { color: #a78bfa; } .tag-audio { color: #60a5fa; }
+        .tag-text  { color: #e5e7eb; } .tag-multi { color: #fbbf24; }
+        
+        .card-title { font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 10px; margin-right: 50px; }
+        .card-desc { font-size: 0.9rem; color: var(--text-sub); margin-bottom: 20px; flex-grow: 1; }
         .card-link {
-            font-size: 0.95rem; color: #fff; font-weight: 600;
-            padding: 14px 0; border-radius: 12px; text-align: center;
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-            margin-top: auto; /* 关键：即使文字很少，按钮也在底部 */
+            font-size: 0.9rem; color: #fff; text-align: center; padding: 12px 0;
+            background: rgba(255,255,255,0.03); border-radius: 8px; margin-top: auto; transition: 0.3s;
         }
-        .card-link:hover { 
-            background: var(--accent); color: #020617; border-color: var(--accent);
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
-        }
+        .card-link:hover { background: var(--accent); color: #000; }
 
-        /* ================== 悬浮按钮组 ================== */
-        .fab-group {
+        /* ================== 右下角按钮 (仅保留回顶部) ================== */
+        .fab-top {
             position: fixed; bottom: 40px; right: 40px;
-            display: flex; flex-direction: column; gap: 12px;
-            z-index: 999;
-            opacity: 0; transform: translateY(20px);
-            transition: all 0.4s ease; pointer-events: none;
-        }
-        .fab-group.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-        .fab {
-            width: 50px; height: 50px;
-            border-radius: 14px;
+            width: 45px; height: 45px; border-radius: 10px;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            color: #fff; font-size: 1.2rem;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; opacity: 0; transform: translateY(20px); transition: 0.4s;
+            z-index: 1000;
         }
-        .fab:hover {
-            border-color: var(--accent); background: rgba(56, 189, 248, 0.1); color: var(--accent);
-            transform: scale(1.1);
-        }
+        .fab-top:hover { border-color: var(--accent); color: var(--accent); }
+        .fab-top.visible { opacity: 1; transform: translateY(0); }
 
         /* ================== 移动端适配 ================== */
         @media (max-width: 768px) {
-            .hero-title { font-size: 2.8rem; }
-            .hero-desc { font-size: 1rem; padding: 0 10px; }
-            .search-input { padding: 16px 20px; font-size: 1rem; }
+            .hero-title { font-size: 2.5rem; }
+            .sticky-header-wrapper { padding: 0.8rem 0; }
+            .sticky-inner { padding: 0 1rem; gap: 0.8rem; }
             
-            .navbar { padding: 1rem; }
-            .main-content { padding: 0 1rem 4rem 1rem; }
-            
-            /* 移动端分类栏：变回横向滚动，但样式美化 */
-            .filter-container { 
-                top: 0; margin: 0 -1rem 2rem -1rem; 
-                width: calc(100% + 2rem);
-                display: block; /* 覆盖 flex */
-                background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(15px);
-                border-bottom: 1px solid rgba(255,255,255,0.05);
-                padding: 10px 0;
-            }
-            .filter-bar {
-                background: transparent; border: none; box-shadow: none; border-radius: 0;
-                justify-content: flex-start; flex-wrap: nowrap;
-                overflow-x: auto; 
-                padding: 0 1rem;
+            /* 移动端分类变为横滑 */
+            .filter-bar { 
+                flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; 
+                width: 100%; padding-bottom: 5px; /* 预留滚动条空间 */
                 /* 隐藏滚动条 */
-                scrollbar-width: none; /* Firefox */
-                -ms-overflow-style: none;  /* IE */
+                scrollbar-width: none; -ms-overflow-style: none;
             }
-            .filter-bar::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+            .filter-bar::-webkit-scrollbar { display: none; }
+            .tag-btn { flex-shrink: 0; white-space: nowrap; }
             
-            .tag-btn { flex-shrink: 0; font-size: 0.85rem; padding: 6px 16px; border-radius: 50px; background: rgba(255,255,255,0.05); }
-            .tag-btn.active { background: var(--accent); color: #000; }
+            .main-content { padding: 1.5rem 1rem; }
+            .fab-top { bottom: 20px; right: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="bgCanvas"></canvas>
-
     <nav class="navbar">
-        <a href="/" class="logo">Datxy</a>
+        <div class="logo">Datxy</div>
         <a href="https://github.com/feeday/datxy.com" target="_blank" class="nav-link">GitHub</a>
     </nav>
 
     <header class="hero-section">
-        <div class="hero-content">
-            <h1 class="hero-title">Connecting Data.</h1>
-            <p class="hero-desc">探索多模态 AI 数据集与在线开发工具的无限可能。</p>
-            
+        <h1 class="hero-title">Connecting Data.</h1>
+        <p class="hero-desc">探索全球优质的图像、视频、音频及多模态 AI 数据集与在线工具。</p>
+    </header>
+
+    <div class="sticky-header-wrapper">
+        <div class="sticky-inner">
             <div class="search-wrapper">
                 <input type="text" class="search-input" id="searchInput" placeholder="搜索资源 (例如: JSON, Sora)...">
             </div>
-        </div>
-        
-        <div class="scroll-indicator" onclick="scrollToContent()">↓</div>
-    </header>
-
-    <div class="main-content" id="mainContent">
-        
-        <div class="filter-container">
             <div class="filter-bar">
                 <button class="tag-btn active" onclick="filterData('all')">全部</button>
                 <button class="tag-btn" onclick="filterData('tool')">在线工具</button>
@@ -329,96 +230,36 @@
                 <button class="tag-btn" onclick="filterData('multi')">多模态</button>
             </div>
         </div>
+    </div>
 
+    <div class="main-content">
         <div id="grid" class="resource-grid">
             </div>
 
-        <footer style="text-align: center; margin-top: 6rem; padding-bottom: 2rem; color: rgba(255,255,255,0.3); font-size: 0.85rem;">
-            <p>© 2025 Datxy.com &nbsp;|&nbsp; Designed for AI Builders</p>
+        <footer style="text-align: center; margin-top: 4rem; color: rgba(255,255,255,0.2); font-size: 0.8rem;">
+            © 2025 Datxy.com
         </footer>
     </div>
 
-    <div class="fab-group" id="fabGroup">
-        <div class="fab" onclick="jumpToSearch()" title="搜索">🔍</div>
-        <div class="fab" onclick="scrollToTop()" title="顶部">↑</div>
-    </div>
+    <div class="fab-top" id="fabTop" onclick="scrollToTop()">↑</div>
 
     <script>
-        // === Canvas 交互特效 (保持原样，未修改) ===
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let width, height, particles = [];
-        const mouse = { x: null, y: null };
-
-        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-        window.addEventListener('mousedown', (e) => {
-            for(let i=0; i<5; i++) particles.push(new Particle(e.x, e.y, true));
-        });
-
-        class Particle {
-            constructor(x, y, isExplosion = false) {
-                this.x = x || Math.random() * width; this.y = y || Math.random() * height;
-                const v = isExplosion ? 3 : 0.5;
-                this.vx = (Math.random()-0.5)*v; this.vy = (Math.random()-0.5)*v;
-                this.size = Math.random()*2+1; this.life = isExplosion ? 100 : -1;
-            }
-            update() {
-                this.x+=this.vx; this.y+=this.vy; if(this.life>0) this.life--;
-                if(this.life===-1 && (this.x<0||this.x>width||this.y<0||this.y>height)){ this.vx*=-1; this.vy*=-1; }
-            }
-            draw() {
-                ctx.fillStyle = `rgba(56, 189, 248, ${this.life>0?this.life/100:0.5})`;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
-            }
-        }
-        function initParticles() { particles=[]; const c = window.innerWidth<768?40:80; for(let i=0; i<c; i++) particles.push(new Particle()); }
-        initParticles();
-
-        function animate() {
-            ctx.clearRect(0,0,width,height);
-            ctx.strokeStyle='rgba(255,255,255,0.03)'; ctx.lineWidth=1;
-            for(let x=0;x<width;x+=100){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke();}
-            for(let y=0;y<height;y+=100){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
-            
-            for(let i=0; i<particles.length; i++) {
-                let p = particles[i]; p.update(); p.draw();
-                if(p.life===0) { particles.splice(i,1); i--; continue; }
-                for(let j=i+1; j<particles.length; j++){
-                    let p2=particles[j], dx=p.x-p2.x, dy=p.y-p2.y, d=Math.sqrt(dx*dx+dy*dy);
-                    if(d<120){ ctx.strokeStyle=`rgba(56,189,248,${1-d/120})`; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y); ctx.stroke(); }
-                }
-                if(mouse.x){
-                    let dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
-                    if(d<200){ ctx.strokeStyle=`rgba(255,255,255,${1-d/200})`; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(mouse.x,mouse.y); ctx.stroke(); }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // === 业务数据 (内容保持不变) ===
+        // === 业务数据 ===
         const resources = [
             { cat: 'tool', title: 'JSON 格式化', desc: '本地校验、美化和压缩 JSON 数据。', url: 'tools/json.html' },
             { cat: 'tool', title: '文本编码转换', desc: 'URL Decode、Base64、Hex 互转。', url: 'tools/text-encoding.html' },
-            { cat: 'tool', title: '时间戳转换', desc: 'Unix 时间戳与日期互转工具。', url: 'tools/timestamp.html' },
+            { cat: 'tool', title: '时间戳转换', desc: 'Unix 时间戳与日期互转。', url: 'tools/timestamp.html' },
             { cat: 'tool', title: '图片格式转换', desc: 'JPG/PNG/WebP 本地互转。', url: 'tools/image-convert.html' },
             { cat: 'tool', title: 'Base64 图片', desc: '图片转代码，前端开发必备。', url: 'tools/base64.html' },
-            
             { cat: 'text', title: 'Hugging Face', desc: '全球最大的 NLP 文本数据集与模型中心。', url: 'https://huggingface.co/' },
             { cat: 'text', title: 'Common Crawl', desc: '开放式网络抓取数据库，大模型训练语料。', url: 'https://commoncrawl.org/' },
-            
             { cat: 'image', title: 'Midjourney', desc: '艺术级 AI 绘图生成工具。', url: 'https://www.midjourney.com/' },
             { cat: 'image', title: 'ImageNet', desc: '计算机视觉领域的标准图像数据集。', url: 'https://www.image-net.org/' },
             { cat: 'image', title: 'LAION-5B', desc: '50亿图文对，Stable Diffusion 训练基石。', url: 'https://laion.ai/' },
-            
             { cat: 'video', title: 'Sora (OpenAI)', desc: '最强文生视频模型，生成高清长视频。', url: 'https://openai.com/sora' },
             { cat: 'video', title: 'Runway Gen-2', desc: '专业的 AI 视频生成与编辑工具。', url: 'https://runwayml.com/' },
-            
             { cat: 'audio', title: 'Suno AI', desc: '生成广播级歌曲的 AI 音乐生成器。', url: 'https://suno.com/' },
             { cat: 'audio', title: 'ElevenLabs', desc: '最自然的 AI 语音合成 (TTS)。', url: 'https://elevenlabs.io/' },
-            
             { cat: 'multi', title: 'ChatGPT-4', desc: '全能助手：文本、代码、识图、绘图。', url: 'https://chat.openai.com/' },
             { cat: 'multi', title: 'Gemini', desc: 'Google 原生多模态大模型。', url: 'https://gemini.google.com/' }
         ];
@@ -428,11 +269,9 @@
 
         function render(list) {
             grid.innerHTML = '';
-            list.forEach((item, index) => {
+            list.forEach((item) => {
                 const el = document.createElement('div');
                 el.className = 'card';
-                // 增加一点入场动画延迟
-                el.style.animation = `fadeIn 0.5s ease forwards ${index * 0.05}s`;
                 
                 let tagClass = '';
                 if(item.cat==='tool') tagClass='tag-tool'; if(item.cat==='image') tagClass='tag-image';
@@ -453,16 +292,15 @@
         }
         render(resources);
 
-        // 简单的淡入动画
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`;
-        document.head.appendChild(style);
-
         function filterData(type) {
             document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             if(type === 'all') render(resources);
             else render(resources.filter(i => i.cat === type));
+            // 筛选时稍微向上滚一点，避免内容被遮挡
+            const offset = document.querySelector('.sticky-header-wrapper').offsetHeight + 20;
+            const topPos = grid.getBoundingClientRect().top + window.pageYOffset - offset;
+            if(window.scrollY > topPos) window.scrollTo({top: topPos, behavior: 'smooth'});
         }
 
         searchInput.addEventListener('input', (e) => {
@@ -470,25 +308,14 @@
             render(resources.filter(i => i.title.toLowerCase().includes(k) || i.desc.toLowerCase().includes(k) || i.cat.includes(k)));
         });
 
-        const fab = document.getElementById('fabGroup');
-        const mainContent = document.getElementById('mainContent');
+        // 回顶部按钮显示逻辑
+        const fab = document.getElementById('fabTop');
         window.addEventListener('scroll', () => {
-            // 当滚动超过 Hero 区域一半时显示浮动按钮
-            if (window.scrollY > window.innerHeight / 2) fab.classList.add('visible');
+            if (window.scrollY > 300) fab.classList.add('visible');
             else fab.classList.remove('visible');
         });
 
-        function scrollToContent() { 
-            // 考虑 sticky header 的高度，做一个偏移
-            const yOffset = -80; 
-            const y = mainContent.getBoundingClientRect().top + window.pageYOffset + yOffset;
-            window.scrollTo({top: y, behavior: 'smooth'});
-        }
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function jumpToSearch() { 
-            scrollToTop(); 
-            setTimeout(() => searchInput.focus(), 800); 
-        }
     </script>
 </body>
 </html>
