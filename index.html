@@ -27,8 +27,9 @@
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-body);
+            /* 背景光效稍微上移，适配没有 Header 的布局 */
             background-image: 
-                radial-gradient(circle at 50% 0%, #1e293b 0%, transparent 80%),
+                radial-gradient(circle at 50% -10%, #1e293b 0%, transparent 80%),
                 radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.03) 0%, transparent 60%);
             background-attachment: fixed;
             color: var(--text-primary);
@@ -41,48 +42,38 @@
 
         a { text-decoration: none; color: inherit; transition: 0.2s; }
 
-        /* ================== 2. 顶部 Logo (简化，因为Footer已有Github) ================== */
-        .navbar {
-            position: absolute; top: 0; left: 0; right: 0;
-            padding: 1.5rem 2rem;
-            display: flex; justify-content: flex-start; align-items: center;
-            z-index: 10;
-        }
-        .logo { font-size: 1.1rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; opacity: 0.8; }
-
-        /* ================== 3. Hero 区域 ================== */
-        .hero-section {
-            padding: 7rem 1rem 3rem 1rem; 
-            text-align: center;
-        }
-
-        .hero-title {
-            font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem;
-            letter-spacing: -0.05em; line-height: 1.1;
-            background: linear-gradient(to bottom right, #fff 40%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-desc { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-
-        /* ================== 4. 深邃悬浮岛 ================== */
+        /* ================== 2. 顶部导航栏 (修改版：直接置顶) ================== */
         .sticky-header-wrapper {
-            position: sticky; top: 20px; z-index: 999;
-            width: 100%; display: flex; justify-content: center;
-            padding: 0 1rem; margin-bottom: 3rem;
+            position: sticky; 
+            top: 0; 
+            z-index: 999;
+            width: 100%; 
+            display: flex; 
+            justify-content: center;
+            padding: 0; 
+            margin-bottom: 2rem; /* 这里的下边距决定了网格离菜单有多远 */
+
+            /* 通栏磨砂背景 */
+            background: rgba(2, 6, 23, 0.85); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         .sticky-inner {
-            background: rgba(2, 6, 23, 0.85); 
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-pill);
-            padding: 8px 10px;
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0,0,0,0.2);
-            max-width: 900px; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            
+            /* 适当增加垂直内边距，让菜单看起来不那么拥挤 */
+            padding: 16px 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 16px;
+            width: 100%;
+            max-width: 1400px; 
         }
 
         /* 搜索框 */
@@ -122,27 +113,29 @@
 
         /* 分类栏 */
         .filter-bar {
-            display: flex; gap: 4px; padding-left: 12px; 
+            display: flex; gap: 6px; padding-left: 16px; 
             border-left: 1px solid rgba(255,255,255,0.1); 
             height: 100%; align-items: center;
         }
 
         .tag-btn {
             background: transparent; border: none;
-            color: var(--text-secondary); padding: 8px 16px; border-radius: var(--radius-pill);
-            font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+            color: var(--text-secondary); padding: 8px 18px; border-radius: var(--radius-pill);
+            font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
         }
         .tag-btn.active { 
             background: #fff; color: #020617; font-weight: 600;
             box-shadow: 0 2px 10px rgba(255,255,255,0.1);
         }
 
-        /* ================== 5. 资源网格 ================== */
+        /* ================== 3. 资源网格 ================== */
         .main-content { padding: 0 2rem; flex: 1; }
 
         .resource-grid {
             display: grid; gap: 20px; max-width: 1400px; margin: 0 auto;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            /* 给上方留一点呼吸空间，如果不想太紧凑 */
+            margin-top: 10px; 
         }
 
         .card {
@@ -190,7 +183,7 @@
         }
         .card-link:hover { background: var(--text-primary); color: #000; border-color: #fff; }
 
-        /* ================== 6. 底部 Footer (新设计) ================== */
+        /* ================== 4. 底部 Footer ================== */
         .site-footer {
             margin-top: 6rem;
             padding: 4rem 1rem;
@@ -208,44 +201,27 @@
             text-align: center;
         }
 
-        .copyright {
-            color: var(--text-tertiary);
-            font-size: 0.85rem;
-        }
+        .copyright { color: var(--text-tertiary); font-size: 0.85rem; }
 
         .footer-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: flex; align-items: center; gap: 24px; flex-wrap: wrap; justify-content: center;
         }
 
         .footer-link-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            padding: 6px 12px;
-            border-radius: 8px;
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.9rem; color: var(--text-secondary);
+            padding: 6px 12px; border-radius: 8px;
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.05);
             transition: all 0.2s ease;
         }
 
         .footer-link-item:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.1);
+            color: #fff; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);
             transform: translateY(-2px);
         }
 
-        .footer-icon {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
+        .footer-icon { width: 16px; height: 16px; fill: currentColor; }
 
         /* 回顶部 */
         .fab-top {
@@ -261,17 +237,13 @@
         .fab-top:hover { border-color: var(--text-secondary); color: #fff; }
         .fab-top.visible { opacity: 1; transform: translateY(0); }
 
-        /* ================== 7. 📱 手机端适配 ================== */
+        /* ================== 5. 📱 手机端适配 ================== */
         @media (max-width: 768px) {
-            .navbar { padding: 1.2rem; }
-            .hero-section { padding-top: 5rem; padding-bottom: 2rem; }
-            .hero-title { font-size: 2.2rem; margin-bottom: 0.5rem; }
-            
-            .sticky-header-wrapper { padding: 0 12px; top: 10px; margin-bottom: 2rem; }
+            .sticky-header-wrapper { padding: 0; top: 0; margin-bottom: 1.5rem; }
             
             .sticky-inner { 
-                flex-direction: column; width: 100%; border-radius: 20px; padding: 14px; gap: 12px;
-                background: rgba(2, 6, 23, 0.98); 
+                flex-direction: column; width: 100%; border-radius: 0; 
+                padding: 12px 16px; gap: 12px; background: transparent; 
             }
             
             .search-wrapper { width: 100%; } 
@@ -279,8 +251,8 @@
             .search-input { font-size: 16px; padding: 10px 34px 10px 40px; }
             
             .filter-bar {
-                width: 100%; border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,0.08); 
-                padding-top: 10px; overflow-x: auto; justify-content: flex-start;
+                width: 100%; border-left: none; padding-left: 0; border-top: none; 
+                padding-top: 0; overflow-x: auto; justify-content: flex-start;
                 -webkit-overflow-scrolling: touch; scrollbar-width: none; 
                 mask-image: linear-gradient(to right, black 90%, transparent 100%);
                 -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
@@ -292,7 +264,6 @@
             .main-content { padding: 0 1rem; }
             .fab-top { width: 40px; height: 40px; bottom: 20px; right: 20px; }
 
-            /* Footer Mobile */
             .site-footer { padding: 3rem 1rem; margin-top: 4rem; }
             .footer-links { gap: 12px; }
             .footer-link-item { font-size: 0.8rem; }
@@ -300,11 +271,6 @@
     </style>
 </head>
 <body>
-
-    <header class="hero-section">
-        <h1 class="hero-title">Connecting Data.</h1>
-        <p class="hero-desc">探索未来。收录全球优质的多模态 AI 数据集与开发者工具。</p>
-    </header>
 
     <div class="sticky-header-wrapper">
         <div class="sticky-inner">
@@ -423,9 +389,8 @@
             if(type === 'all') render(resources);
             else render(resources.filter(i => i.cat === type));
             
-            const stickyHeight = document.querySelector('.sticky-inner').offsetHeight + 40;
-            const topPos = grid.getBoundingClientRect().top + window.pageYOffset - stickyHeight;
-            if(window.scrollY > topPos) window.scrollTo({top: topPos, behavior: 'smooth'});
+            // 点击分类后平滑滚动到顶部
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         searchInput.addEventListener('input', (e) => {
