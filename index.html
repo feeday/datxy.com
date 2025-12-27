@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多模态数据 AI 导航网站</title>
+    <title>Datxy - 多模态 AI 导航</title>
     <meta name="description" content="收录全球优质的图像、视频、音频、文本及多模态 AI 数据集与在线工具。">
     
     <style>
         /* ================== 核心变量 ================== */
         :root {
             --bg-dark: #020617;
-            --bg-card: rgba(15, 23, 42, 0.6); /* 卡片更通透 */
+            --bg-card: rgba(15, 23, 42, 0.7); /* 卡片颜色 */
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --accent: #38bdf8; /* 天蓝色 */
-            --border: rgba(255, 255, 255, 0.05);
+            --accent: #38bdf8; /* 科技蓝 */
+            --border: rgba(255, 255, 255, 0.08);
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
@@ -24,20 +24,21 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.6;
-            overflow-x: hidden; /* 防止横向滚动 */
+            overflow-x: hidden;
         }
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-        /* ================== 顶部导航 (悬浮透明) ================== */
+        /* ================== 顶部导航 ================== */
         .navbar {
             position: fixed; top: 0; left: 0; right: 0;
             padding: 1.5rem 2.5rem;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 100;
-            /* 只有下滑后才显示背景模糊，JS控制(可选)，这里做简单的渐变 */
-            background: linear-gradient(to bottom, rgba(2,6,23,0.8), transparent);
+            background: linear-gradient(to bottom, rgba(2,6,23,0.9), transparent);
+            pointer-events: none; /* 让鼠标能穿透导航栏点击 Canvas，除了里面的链接 */
         }
+        .navbar a { pointer-events: auto; } /* 恢复链接点击 */
 
         .logo { 
             font-family: 'Courier New', monospace;
@@ -50,17 +51,18 @@
         }
 
         .nav-link { 
-            font-size: 0.85rem; color: rgba(255,255,255,0.6); 
+            font-size: 0.85rem; color: rgba(255,255,255,0.7); 
             border: 1px solid rgba(255,255,255,0.1);
             padding: 6px 14px; border-radius: 50px;
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(5px);
             transition: 0.3s;
         }
         .nav-link:hover { color: #fff; border-color: var(--accent); background: rgba(56,189,248,0.1); }
 
-        /* ================== Hero 全屏视觉区 (Canvas 背景) ================== */
+        /* ================== Hero 全屏视觉区 ================== */
         .hero-section {
             position: relative;
-            height: 100vh; /* 关键：占满全屏 */
+            height: 100vh;
             display: flex; flex-direction: column; 
             justify-content: center; align-items: center;
             text-align: center;
@@ -68,18 +70,19 @@
             overflow: hidden;
         }
 
-        /* 动态背景 Canvas */
+        /* Canvas 背景 */
         #bgCanvas {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; /* 放在最底层 */
+            z-index: -1;
             background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+            cursor: crosshair; /* 鼠标变十字，提示可点击 */
         }
 
         .hero-content {
-            z-index: 2; /* 内容浮在 Canvas 上 */
-            width: 100%; max-width: 800px;
-            animation: fadeInUp 1s ease-out;
+            z-index: 2; width: 100%; max-width: 800px;
+            pointer-events: none; /* 让点击穿透文字直达 Canvas */
         }
+        .hero-content > * { pointer-events: auto; } /* 恢复输入框交互 */
 
         .hero-title {
             font-size: 3.5rem; font-weight: 900; margin-bottom: 1rem;
@@ -87,109 +90,114 @@
             background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
         .hero-desc {
             color: var(--text-sub); font-size: 1.1rem; margin-bottom: 3rem;
         }
 
-        /* 极简搜索框 */
         .search-wrapper {
             position: relative; max-width: 500px; margin: 0 auto;
         }
         .search-input {
             width: 100%; padding: 16px 24px; border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.4);
             color: #fff; font-size: 1rem;
             backdrop-filter: blur(10px);
             transition: all 0.3s;
         }
         .search-input:focus {
             border-color: var(--accent);
-            background: rgba(0,0,0,0.5);
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+            background: rgba(0,0,0,0.6);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
         }
 
-        /* 向下滚动引导箭头 */
         .scroll-indicator {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
             color: rgba(255,255,255,0.3); font-size: 1.5rem;
-            animation: bounce 2s infinite; cursor: pointer;
-            z-index: 2;
+            animation: bounce 2s infinite; cursor: pointer; z-index: 5;
         }
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
             40% {transform: translateX(-50%) translateY(-10px);}
             60% {transform: translateX(-50%) translateY(-5px);}
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
 
-        /* ================== 主内容区 (下滑后显示) ================== */
+        /* ================== 主内容区 ================== */
         .main-content {
             position: relative;
-            background: var(--bg-dark); /* 遮住上面的 Canvas */
+            background: var(--bg-dark);
             min-height: 100vh;
             padding: 4rem 2rem;
             border-top: 1px solid var(--border);
-            box-shadow: 0 -20px 50px rgba(0,0,0,0.5); /* 阴影分割感 */
+            box-shadow: 0 -20px 50px rgba(0,0,0,0.8);
             z-index: 10;
         }
 
-        /* 分类过滤器 */
+        /* 细分的过滤器 */
         .filter-bar {
-            display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+            display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
             margin-bottom: 3rem;
         }
         .tag-btn {
             background: transparent; border: 1px solid var(--border);
-            color: var(--text-sub); padding: 6px 16px; border-radius: 4px;
-            font-size: 0.85rem; cursor: pointer; transition: 0.3s;
+            color: var(--text-sub); padding: 8px 20px; border-radius: 50px;
+            font-size: 0.9rem; cursor: pointer; transition: 0.3s;
         }
-        .tag-btn:hover, .tag-btn.active {
-            border-color: var(--accent); color: var(--accent);
-            background: rgba(56, 189, 248, 0.05);
+        .tag-btn:hover {
+            border-color: rgba(255,255,255,0.3); color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+        .tag-btn.active {
+            border-color: var(--accent); color: #000;
+            background: var(--accent); font-weight: 600;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
         /* 资源网格 */
         .resource-grid {
             display: grid; gap: 20px; max-width: 1400px; margin: 0 auto;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         }
 
-        /* 卡片极简风 */
         .card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 8px; padding: 20px;
+            border-radius: 12px; padding: 24px;
             transition: all 0.3s; position: relative;
             display: flex; flex-direction: column;
         }
         .card:hover {
             border-color: rgba(56, 189, 248, 0.4);
             transform: translateY(-5px);
-            background: rgba(30, 41, 59, 0.6);
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .card-tag {
             position: absolute; top: 20px; right: 20px;
-            font-size: 0.65rem; color: rgba(255,255,255,0.4);
+            font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.6);
             border: 1px solid rgba(255,255,255,0.1);
-            padding: 2px 6px; border-radius: 4px;
+            padding: 4px 8px; border-radius: 6px;
+            text-transform: uppercase;
         }
+        /* 不同分类显示不同颜色微光 */
+        .tag-tool { color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+        .tag-image { color: #f472b6; border-color: rgba(244, 114, 182, 0.3); }
+        .tag-video { color: #a78bfa; border-color: rgba(167, 139, 250, 0.3); }
+        .tag-multi { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
         
-        .card-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
-        .card-desc { font-size: 0.85rem; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px; flex-grow: 1; }
+        .card-title { font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: var(--text-sub); line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
         .card-link {
-            font-size: 0.85rem; color: var(--accent); font-weight: 500;
-            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.9rem; color: var(--text-main); font-weight: 600;
+            padding: 10px 0; border-radius: 8px; text-align: center;
+            background: rgba(255,255,255,0.05); transition: 0.3s;
         }
-        .card-link:hover { text-decoration: underline; }
+        .card-link:hover { background: var(--accent); color: #000; }
 
-        /* ================== 右下角悬浮组 (极简风) ================== */
+        /* ================== 悬浮按钮组 ================== */
         .fab-group {
             position: fixed; bottom: 30px; right: 30px;
             display: flex; flex-direction: column; gap: 10px;
@@ -200,25 +208,24 @@
         .fab-group.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
         .fab {
-            width: 40px; height: 40px; /* 小一点 */
-            border-radius: 8px; /* 方圆形，更极简 */
+            width: 45px; height: 45px;
+            border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.3); /* 纯透明磨砂 */
+            background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(8px);
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.8);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.3s;
         }
         .fab:hover {
             border-color: var(--accent); color: var(--accent);
             background: rgba(56, 189, 248, 0.1);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
         }
 
-        /* 移动端适配 */
         @media (max-width: 768px) {
-            .hero-title { font-size: 2.2rem; }
-            .navbar { padding: 1rem; }
+            .hero-title { font-size: 2.5rem; }
+            .filter-bar { gap: 8px; }
+            .tag-btn { padding: 6px 14px; font-size: 0.8rem; }
             .fab-group { bottom: 20px; right: 20px; }
         }
     </style>
@@ -235,16 +242,14 @@
     <header class="hero-section">
         <div class="hero-content">
             <h1 class="hero-title">Connecting Data.</h1>
-            <p class="hero-desc">多模态 AI 数据集与在线开发工具的交叉点。</p>
+            <p class="hero-desc">探索多模态 AI 数据集与在线开发工具的无限可能。</p>
             
             <div class="search-wrapper">
-                <input type="text" class="search-input" id="searchInput" placeholder="搜索节点 (例如: JSON, Sora)...">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索资源 (例如: JSON, Sora)...">
             </div>
         </div>
         
-        <div class="scroll-indicator" onclick="scrollToContent()">
-            ↓
-        </div>
+        <div class="scroll-indicator" onclick="scrollToContent()">↓</div>
     </header>
 
     <div class="main-content" id="mainContent">
@@ -252,8 +257,11 @@
         <div class="filter-bar">
             <button class="tag-btn active" onclick="filterData('all')">全部</button>
             <button class="tag-btn" onclick="filterData('tool')">在线工具</button>
-            <button class="tag-btn" onclick="filterData('ai')">AI 模型</button>
-            <button class="tag-btn" onclick="filterData('data')">数据集</button>
+            <button class="tag-btn" onclick="filterData('image')">图像</button>
+            <button class="tag-btn" onclick="filterData('video')">视频</button>
+            <button class="tag-btn" onclick="filterData('audio')">音频</button>
+            <button class="tag-btn" onclick="filterData('text')">文本</button>
+            <button class="tag-btn" onclick="filterData('multi')">多模态</button>
         </div>
 
         <div id="grid" class="resource-grid">
@@ -265,18 +273,20 @@
     </div>
 
     <div class="fab-group" id="fabGroup">
-        <div class="fab" onclick="jumpToSearch()">🔍</div>
-        <div class="fab" onclick="scrollToTop()">↑</div>
+        <div class="fab" onclick="jumpToSearch()" title="搜索">🔍</div>
+        <div class="fab" onclick="scrollToTop()" title="顶部">↑</div>
     </div>
 
     <script>
-        // === 1. Canvas 粒子连线动画 (核心特效) ===
+        // === 核心特效：鼠标交互 Canvas ===
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
         let particles = [];
+        
+        // 鼠标位置追踪
+        const mouse = { x: null, y: null };
 
-        // 初始化尺寸
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -284,94 +294,140 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // 粒子类
+        // 监听鼠标移动
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        // 监听点击：生成爆炸粒子
+        window.addEventListener('mousedown', (e) => {
+            const count = 5; // 每次点击生成的点数
+            for(let i=0; i<count; i++) {
+                particles.push(new Particle(e.x, e.y, true));
+            }
+        });
+
         class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 1; // 速度慢一点
-                this.vy = (Math.random() - 0.5) * 1;
+            constructor(x, y, isExplosion = false) {
+                this.x = x || Math.random() * width;
+                this.y = y || Math.random() * height;
+                // 如果是点击生成的，速度快一点
+                const v = isExplosion ? 3 : 0.5;
+                this.vx = (Math.random() - 0.5) * v;
+                this.vy = (Math.random() - 0.5) * v;
                 this.size = Math.random() * 2 + 1;
+                this.life = isExplosion ? 100 : -1; // 点击生成的粒子有寿命
             }
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                // 边界反弹
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
+                
+                // 寿命逻辑
+                if(this.life > 0) this.life--;
+
+                // 边界反弹 (如果是普通粒子)
+                if(this.life === -1) {
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
             }
             draw() {
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.5)'; // 粒子颜色
+                ctx.fillStyle = `rgba(56, 189, 248, ${this.life > 0 ? this.life/100 : 0.5})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        // 创建粒子
         function initParticles() {
             particles = [];
-            const count = window.innerWidth < 768 ? 40 : 80; // 手机端少一点
+            // 初始粒子数量
+            const count = window.innerWidth < 768 ? 40 : 80;
             for (let i = 0; i < count; i++) particles.push(new Particle());
         }
         initParticles();
 
-        // 动画循环
         function animate() {
             ctx.clearRect(0, 0, width, height);
             
-            // 绘制背景网格 (坐标系效果)
+            // 绘制背景网格
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.lineWidth = 1;
             const gridSize = 100;
-            // 垂直线
             for (let x = 0; x < width; x += gridSize) {
                 ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
             }
-            // 水平线
             for (let y = 0; y < height; y += gridSize) {
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
             }
 
-            // 更新并绘制粒子
-            particles.forEach((p, index) => {
+            // 更新粒子
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
                 p.update();
                 p.draw();
-                
-                // 连线逻辑 (Node Connection)
-                for (let j = index + 1; j < particles.length; j++) {
+
+                // 移除寿命耗尽的粒子
+                if(p.life === 0) {
+                    particles.splice(i, 1);
+                    i--;
+                    continue;
+                }
+
+                // 1. 粒子之间的连线
+                for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dx = p.x - p2.x;
                     const dy = p.y - p2.y;
                     const dist = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if (dist < 150) { // 连线阈值
-                        ctx.strokeStyle = `rgba(56, 189, 248, ${1 - dist/150})`; // 距离越近线越亮
+                    if (dist < 120) {
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${1 - dist/120})`;
                         ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
                     }
                 }
-            });
+
+                // 2. 粒子与鼠标的连线 (交互特效)
+                if (mouse.x != null) {
+                    const dx = p.x - mouse.x;
+                    const dy = p.y - mouse.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 200) { // 鼠标吸附半径
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist/200})`; // 离鼠标越近越白
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+                    }
+                }
+            }
             requestAnimationFrame(animate);
         }
         animate();
 
-        // === 2. 业务逻辑 (卡片渲染) ===
+        // === 业务逻辑：精细分类 ===
+        // 关键：cat 字段对应 filter-bar 里的参数
         const resources = [
             { cat: 'tool', title: 'JSON 格式化', desc: '本地校验、美化和压缩 JSON 数据。', url: 'tools/json.html' },
             { cat: 'tool', title: '文本编码转换', desc: 'URL Decode、Base64、Hex 互转。', url: 'tools/text-encoding.html' },
             { cat: 'tool', title: '时间戳转换', desc: 'Unix 时间戳与日期互转。', url: 'tools/timestamp.html' },
             { cat: 'tool', title: '图片格式转换', desc: 'JPG/PNG/WebP 本地互转。', url: 'tools/image-convert.html' },
             { cat: 'tool', title: 'Base64 图片', desc: '图片转代码，前端开发必备。', url: 'tools/base64.html' },
-            { cat: 'ai', title: 'Sora (OpenAI)', desc: '最强文生视频模型。', url: 'https://openai.com/sora' },
-            { cat: 'ai', title: 'ChatGPT-4', desc: '全能多模态助手。', url: 'https://chat.openai.com/' },
-            { cat: 'ai', title: 'Midjourney', desc: '艺术级 AI 绘图。', url: 'https://www.midjourney.com/' },
-            { cat: 'data', title: 'Hugging Face', desc: '全球 AI 模型与数据集中心。', url: 'https://huggingface.co/' },
-            { cat: 'data', title: 'ImageNet', desc: '计算机视觉标准数据集。', url: 'https://www.image-net.org/' },
-            { cat: 'data', title: 'Common Crawl', desc: '大模型训练核心语料库。', url: 'https://commoncrawl.org/' }
+            
+            { cat: 'text', title: 'Hugging Face', desc: '全球最大的 NLP 文本数据集与模型中心。', url: 'https://huggingface.co/' },
+            { cat: 'text', title: 'Common Crawl', desc: '开放式网络抓取数据库，大模型训练语料。', url: 'https://commoncrawl.org/' },
+            
+            { cat: 'image', title: 'Midjourney', desc: '艺术级 AI 绘图生成工具。', url: 'https://www.midjourney.com/' },
+            { cat: 'image', title: 'ImageNet', desc: '计算机视觉领域的标准图像数据集。', url: 'https://www.image-net.org/' },
+            { cat: 'image', title: 'LAION-5B', desc: '50亿图文对，Stable Diffusion 训练基石。', url: 'https://laion.ai/' },
+            
+            { cat: 'video', title: 'Sora (OpenAI)', desc: '最强文生视频模型，生成高清长视频。', url: 'https://openai.com/sora' },
+            { cat: 'video', title: 'Runway Gen-2', desc: '专业的 AI 视频生成与编辑工具。', url: 'https://runwayml.com/' },
+            
+            { cat: 'audio', title: 'Suno AI', desc: '生成广播级歌曲的 AI 音乐生成器。', url: 'https://suno.com/' },
+            { cat: 'audio', title: 'ElevenLabs', desc: '最自然的 AI 语音合成 (TTS)。', url: 'https://elevenlabs.io/' },
+            
+            { cat: 'multi', title: 'ChatGPT-4', desc: '全能助手：文本、代码、识图、绘图。', url: 'https://chat.openai.com/' },
+            { cat: 'multi', title: 'Gemini', desc: 'Google 原生多模态大模型。', url: 'https://gemini.google.com/' }
         ];
 
         const grid = document.getElementById('grid');
@@ -382,11 +438,19 @@
             list.forEach(item => {
                 const el = document.createElement('div');
                 el.className = 'card';
-                // 标签样式
+                
+                // 颜色标签逻辑
+                let tagClass = '';
+                if(item.cat === 'tool') tagClass = 'tag-tool';
+                if(item.cat === 'image') tagClass = 'tag-image';
+                if(item.cat === 'video') tagClass = 'tag-video';
+                if(item.cat === 'multi') tagClass = 'tag-multi';
+
                 const isTool = item.cat === 'tool';
                 const target = isTool ? '_self' : '_blank';
+                
                 el.innerHTML = `
-                    <span class="card-tag">${item.cat.toUpperCase()}</span>
+                    <span class="card-tag ${tagClass}">${item.cat.toUpperCase()}</span>
                     <div class="card-title">${item.title}</div>
                     <div class="card-desc">${item.desc}</div>
                     <a href="${item.url}" target="${target}" class="card-link">
@@ -409,15 +473,14 @@
         // 搜索
         searchInput.addEventListener('input', (e) => {
             const k = e.target.value.toLowerCase();
-            render(resources.filter(i => i.title.toLowerCase().includes(k) || i.desc.toLowerCase().includes(k)));
+            render(resources.filter(i => i.title.toLowerCase().includes(k) || i.desc.toLowerCase().includes(k) || i.cat.includes(k)));
         });
 
-        // === 3. 滚动交互 ===
+        // 滚动交互
         const fab = document.getElementById('fabGroup');
         const mainContent = document.getElementById('mainContent');
 
         window.addEventListener('scroll', () => {
-            // 滑过首屏一半时显示悬浮按钮
             if (window.scrollY > window.innerHeight / 2) {
                 fab.classList.add('visible');
             } else {
