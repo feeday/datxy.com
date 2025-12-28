@@ -61,7 +61,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: var(--radius-pill);           
+            border-radius: var(--radius-pill);            
             box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5); 
             padding: 8px 12px; 
             display: flex; 
@@ -72,44 +72,149 @@
             pointer-events: auto; 
         }
 
-        /* 搜索框 */
+        /* ================== 搜索栏终极优化版 ================== */
+        
+        /* 容器：加宽，圆角更圆，背景更深 */
         .search-wrapper { 
             position: relative; 
-            width: 260px; 
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .search-wrapper:focus-within { width: 300px; }
-
-        .search-input {
-            width: 100%; 
-            padding: 10px 34px 10px 38px;
+            width: 380px; 
+            height: 44px; /* 稍微加高一点，手感更好 */
             border-radius: var(--radius-pill);
-            border: 1px solid transparent;
-            background: rgba(0, 0, 0, 0.3); 
-            color: #fff; 
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            background: rgba(15, 23, 42, 0.6); /* 更深的背景，突出质感 */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 6px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
         
-        .search-wrapper::before {
-            content: '🔍'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-            font-size: 0.8rem; opacity: 0.4; pointer-events: none; filter: grayscale(100%);
+        /* 聚焦时的光效 */
+        .search-wrapper:focus-within { 
+            width: 420px; 
+            background: rgba(15, 23, 42, 0.8);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
         }
 
+        /* 左侧下拉触发器：紧凑布局 */
+        .custom-select {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding-left: 8px;
+            /* 去掉 min-width，改为自适应，消灭右侧留白 */
+            -webkit-user-select: none; user-select: none;
+        }
+
+        .select-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px; /* 文字和箭头的间距 */
+            height: 100%;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .select-trigger:hover { opacity: 0.8; }
+
+        .arrow-icon {
+            width: 12px; height: 12px; fill: currentColor; opacity: 0.5;
+            transition: transform 0.3s ease;
+        }
+        .custom-select.active .arrow-icon { transform: rotate(180deg); }
+
+        /* 分割线：更细更淡，紧贴内容 */
+        .search-inner-divider {
+            width: 1px; height: 18px; 
+            background: rgba(255,255,255,0.1); 
+            margin: 0 10px; /* 控制分割线左右间距 */
+            flex-shrink: 0;
+        }
+
+        /* 输入框：字体调大 */
+        .search-input {
+            flex: 1; border: none; background: transparent;
+            color: #fff; font-size: 0.95rem; padding: 0; height: 100%;
+            min-width: 0; /* 防止溢出 */
+        }
+        /* placeholder 颜色淡一点 */
+        .search-input::placeholder { color: rgba(148, 163, 184, 0.5); }
+        
+        /* 清除按钮 */
         .search-clear {
-            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-            width: 30px; height: 30px; line-height: 30px; text-align: center;
-            border-radius: 50%; background: rgba(255,255,255,0.15); 
-            color: #fff; font-size: 14px; cursor: pointer;
-            display: none; touch-action: manipulation; transition: background 0.2s;
+            width: 20px; height: 20px; line-height: 20px; text-align: center;
+            border-radius: 50%; background: rgba(255,255,255,0.1); 
+            color: #fff; font-size: 10px; cursor: pointer;
+            display: none; margin-right: 8px; flex-shrink: 0;
         }
-        .search-clear:hover { background: rgba(255,255,255,0.3); }
-        .search-clear:active { background: rgba(255,255,255,0.5); }
+        .search-clear:hover { background: rgba(255,255,255,0.25); }
 
-        .search-input:focus {
-            background: rgba(0,0,0,0.5);
-            border-color: rgba(56, 189, 248, 0.3);
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+        /* 搜索按钮：改为圆形高亮按钮 */
+        .external-search-btn {
+            width: 34px; height: 34px; 
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            /* 默认灰色 */
+            background: rgba(255,255,255,0.05); 
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            flex-shrink: 0;
+            margin-left: 0;
+        }
+        
+        .external-search-btn svg { width: 16px; height: 16px; stroke-width: 2.5; }
+        
+        /* 悬停效果 */
+        .external-search-btn:hover {
+            background: #38bdf8; /* 亮蓝色 */
+            color: #0f172a;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        .external-search-btn:active { transform: scale(0.95); }
+
+        /* 下拉菜单样式微调 */
+        .select-options {
+            position: absolute;
+            top: 50px; left: 0;
+            width: 140px; /* 菜单稍微宽一点 */
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 6px;
+            display: flex; flex-direction: column; gap: 2px;
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+            opacity: 0; visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000; 
+        }
+        .custom-select.active .select-options { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        
+        .option-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .option-item.selected {
+            background: rgba(56, 189, 248, 0.15); 
+            color: #38bdf8;
+            font-weight: 600;
         }
 
         .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); margin: 0 4px; }
@@ -192,7 +297,7 @@
             background: linear-gradient(135deg, #ef4444 50%, transparent 50%);
             display: flex; align-items: flex-start; justify-content: flex-start;
             padding: 4px 0 0 4px;
-            border-bottom-right-radius: 32px; /* 扇形效果 */
+            border-bottom-right-radius: 32px; 
             z-index: 5;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
         }
@@ -213,6 +318,9 @@
         }
         .card-link:hover { background: var(--text-primary); color: #000; border-color: #fff; }
         
+        /* 抖动动画 */
+        @keyframes shake { 0%,100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ================== 4. Footer ================== */
         .site-footer {
@@ -245,7 +353,7 @@
             .sticky-header-wrapper { padding: 10px; top: 0; padding-top: 10px; padding-bottom: 20px; margin-bottom: 20px; }
             .sticky-inner { flex-direction: column; width: 100%; border-radius: 20px; padding: 12px 14px; gap: 10px; }
             .search-wrapper, .search-wrapper:focus-within { width: 100%; }
-            .search-input { font-size: 16px; padding: 10px 34px 10px 40px; }
+            .search-input { font-size: 16px; }
             .divider { display: none; } 
             .filter-bar { width: 100%; overflow-x: auto; justify-content: flex-start; scrollbar-width: none; }
             .filter-bar::-webkit-scrollbar { display: none; }
@@ -259,16 +367,44 @@
 
     <div class="sticky-header-wrapper">
         <div class="sticky-inner">
+            
             <div class="search-wrapper">
-                <input type="text" class="search-input" id="searchInput" placeholder="搜索资源...">
+                
+                <div class="custom-select" id="customSelect">
+                    <div class="select-trigger" onclick="toggleSelect(event)">
+                        <span id="currentEngineText">Google</span>
+                        <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+                    
+                    <input type="hidden" id="searchEngineValue" value="https://www.google.com/search?q=">
+
+                    <div class="select-options" id="selectOptions">
+                        <div class="option-item selected" onclick="selectEngine('https://www.google.com/search?q=', 'Google', this)">Google</div>
+                        <div class="option-item" onclick="selectEngine('https://www.youtube.com/results?search_query=', 'YouTube', this)">YouTube</div>
+                        <div class="option-item" onclick="selectEngine('https://yandex.by/images/search?text=', 'Yandex', this)">Yandex</div>
+                        <div class="option-item" onclick="selectEngine('https://search.bilibili.com/all?keyword=', 'B站', this)">Bilibili</div>
+                        <div class="option-item" onclick="selectEngine('https://www.douyin.com/search/', '抖音', this)">Douyin</div>
+                        <div class="option-item" onclick="selectEngine('https://www.baidu.com/s?q2=', '百度', this)">Baidu</div>
+                        <div class="option-item" onclick="selectEngine('https://tieba.baidu.com/f/search/res?ie=utf-8&amp;qw=', '贴吧', this)">Tieba</div>
+                        <div class="option-item" onclick="selectEngine('https://s.weibo.com/weibo?q=', '微博', this)">Weibo</div>
+                    </div>
+                </div>
+                
+                <div class="search-inner-divider"></div>
+
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索链接或关键字..." autocomplete="off">
+                
                 <span class="search-clear" id="searchClear" onmousedown="event.preventDefault()" onclick="clearSearch()">✕</span>
+                
+                <div class="external-search-btn" id="externalSearchBtn" title="搜索">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
             </div>
             
             <div class="divider"></div>
             
             <div class="filter-bar">
                 <div class="filter-glider" id="filterGlider"></div>
-
                 <button class="tag-btn active" onclick="filterData('all', this)">全部</button>
                 <button class="tag-btn" onclick="filterData('website', this)">网站</button>
                 <button class="tag-btn" onclick="filterData('tool', this)">工具</button>
@@ -277,7 +413,6 @@
                 <button class="tag-btn" onclick="filterData('video', this)">视频</button>
                 <button class="tag-btn" onclick="filterData('audio', this)">音频</button>
                 <button class="tag-btn" onclick="filterData('multi', this)">多模态</button>
-
             </div>
         </div>
     </div>
@@ -299,10 +434,10 @@
                     <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.998 8.014L5.358 13.91h3.918l-1.057 5.766 8.649-11.338H11.23l1.823-5.326L9.998 8.014zm-4.39 1.764L1.76 14.54a3.868 3.868 0 0 0 3.863 3.87h1.01c.21 1.58 1.56 2.8 3.19 2.8h7.957a4.67 4.67 0 0 0 1.516-9.088c-.015-.173-.023-.35-.023-.527a6.62 6.62 0 0 0-6.619-6.619c-2.923 0-5.412 1.89-6.289 4.526a3.882 3.882 0 0 0-.765-.077z"/></svg> Cloudflare
                 </a>
                 <a href="https://huggingface.co/" target="_blank" class="footer-link-item">
-    <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 3.2 1.25 6.13 3.32 8.35l.04.05c.82.88 2.06 1.2 2.97.77.92-.42 1.2-1.65.8-2.57l-.05-.12c-.52-.86-.82-1.85-.82-2.91 0-3.17 2.58-5.75 5.75-5.75 3.17 0 5.75 2.58 5.75 5.75 0 1.05-.29 2.03-.8 2.89l-.04.1c-.42.94-.15 2.18.78 2.6.93.43 2.18.1 3.01-.79l.05-.05C22.75 18.63 24 15.7 24 12.5 24 5.87 18.63.5 12 .5zM7.75 11.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5zM12 17.6c-2.04 0-3.8-1.24-4.52-3.01h9.04c-.72 1.77-2.48 3.01-4.52 3.01zM16.25 11.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5z"/>
-    </svg> HuggingFace
-</a>
+                    <svg class="footer-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 3.2 1.25 6.13 3.32 8.35l.04.05c.82.88 2.06 1.2 2.97.77.92-.42 1.2-1.65.8-2.57l-.05-.12c-.52-.86-.82-1.85-.82-2.91 0-3.17 2.58-5.75 5.75-5.75 3.17 0 5.75 2.58 5.75 5.75 0 1.05-.29 2.03-.8 2.89l-.04.1c-.42.94-.15 2.18.78 2.6.93.43 2.18.1 3.01-.79l.05-.05C22.75 18.63 24 15.7 24 12.5 24 5.87 18.63.5 12 .5zM7.75 11.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5zM12 17.6c-2.04 0-3.8-1.24-4.52-3.01h9.04c-.72 1.77-2.48 3.01-4.52 3.01zM16.25 11.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5z"/>
+                    </svg> HuggingFace
+                </a>
             </div>
         </div>
     </footer>
@@ -310,7 +445,6 @@
     <div class="fab-top" id="fabTop" onclick="scrollToTop()">↑</div>
 
     <script>
-        // 增加 isTop: true 属性来实现置顶
         const resources = [
             { cat: 'tool', title: 'IP-地址查询', desc: '高精度IP地址归属地查询。', url: 'http://ping0.cc/' },
             { cat: 'tool', title: 'Cloud Studio', desc: '腾讯云代码。', url: 'https://cloudstudio.net/'},
@@ -366,8 +500,6 @@
             visibleCards = []; 
             selectedCardIndex = -1;
 
-            // ✨ 核心逻辑：排序 ✨
-            // 如果 isTop 为 true，排在前面；否则保持原位
             list.sort((a, b) => {
                 if (a.isTop && !b.isTop) return -1;
                 if (!a.isTop && b.isTop) return 1;
@@ -399,8 +531,6 @@
                 if(item.cat === 'multi') tagName = '多模态';
 
                 const target = '_blank';
-                
-                // ✨ 如果是置顶，插入 pin-icon ✨
                 const pinHtml = item.isTop ? '<div class="pin-icon"></div>' : '';
 
                 el.innerHTML = `
@@ -417,10 +547,6 @@
             });
         }
         
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }`;
-        document.head.appendChild(style);
-
         render(resources);
 
         // ================== 滑块逻辑 ==================
@@ -443,7 +569,93 @@
         window.addEventListener('load', () => { const activeBtn = document.querySelector('.tag-btn.active'); if(activeBtn) moveGlider(activeBtn); });
         window.addEventListener('resize', () => { const activeBtn = document.querySelector('.tag-btn.active'); if(activeBtn) moveGlider(activeBtn); });
 
-        // ================== 全键盘导航 ==================
+        // ================== 核心交互逻辑 ==================
+        
+        // 1. 下拉框开关
+        function toggleSelect(e) {
+            e.stopPropagation(); 
+            const wrapper = document.getElementById('customSelect');
+            wrapper.classList.toggle('active');
+        }
+
+        // 2. 默认引擎配置
+        const DEFAULT_ENGINE = "http://regurl.cn/?s=";
+
+        // 3. 引擎选择逻辑
+        function selectEngine(value, name, element) {
+            document.getElementById('searchEngineValue').value = value;
+            document.getElementById('currentEngineText').innerText = name;
+            
+            // 更新选中样式
+            document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // 关闭下拉框
+            document.getElementById('customSelect').classList.remove('active');
+            
+            // 更改提示词，优化体验
+            const input = document.getElementById('searchInput');
+            if (value === DEFAULT_ENGINE) {
+                input.placeholder = "筛选资源...";
+            } else {
+                input.placeholder = `回车搜索 ${name}...`;
+            }
+            input.focus();
+        }
+
+        // 4. 执行搜索
+        function performSearch() {
+            const engine = document.getElementById('searchEngineValue').value; 
+            const query = document.getElementById('searchInput').value;
+            
+            if (!query.trim()) {
+                const wrapper = document.querySelector('.search-wrapper');
+                wrapper.style.animation = 'shake 0.4s ease-in-out';
+                setTimeout(() => wrapper.style.animation = '', 400);
+                return;
+            }
+
+            const url = engine + encodeURIComponent(query);
+            if (engine.includes("regurl.cn")) {
+                window.location.href = url;
+            } else {
+                window.open(url, "_blank");
+            }
+        }
+
+        // 点击其他区域关闭下拉框
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('customSelect');
+            if (!wrapper.contains(e.target)) {
+                wrapper.classList.remove('active');
+            }
+        });
+
+        // 5. 绑定点击搜索
+        document.getElementById('externalSearchBtn').addEventListener('click', performSearch);
+
+        // 6. 实时筛选 (本地)
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            searchClear.style.display = val.length > 0 ? 'block' : 'none';
+            const k = val.toLowerCase();
+            
+            render(resources.filter(i => 
+                i.title.toLowerCase().includes(k) || 
+                i.desc.toLowerCase().includes(k) || 
+                i.cat.includes(k) ||
+                i.url.toLowerCase().includes(k) 
+            ));
+        });
+
+        function clearSearch() {
+            searchInput.value = '';
+            searchClear.style.display = 'none';
+            render(resources);
+            searchInput.focus();
+        }
+        
+        // 7. 键盘交互 & 智能回车
         function updateSelection(index) {
             visibleCards.forEach(c => c.classList.remove('active-focus'));
             if (index >= 0 && index < visibleCards.length) {
@@ -457,12 +669,33 @@
         document.addEventListener('keydown', (e) => {
             if (document.activeElement === searchInput) {
                 if (e.key === 'Enter') {
+                    const engine = document.getElementById('searchEngineValue').value;
+                    
+                    // 情况A: 选了外部引擎 -> 直接全网搜
+                    if (engine !== DEFAULT_ENGINE) {
+                        e.preventDefault();
+                        performSearch();
+                        return;
+                    }
+
+                    // 情况B: 默认引擎 + Shift -> 强制全网搜
+                    if (e.shiftKey) {
+                        e.preventDefault();
+                        performSearch();
+                        return;
+                    }
+
+                    // 情况C: 默认引擎 -> 打开本地结果
                     if (visibleCards.length > 0) {
                         searchInput.blur();
-                        updateSelection(0);
+                        const link = visibleCards[0].querySelector('a');
+                        if (link) link.click();
+                    } else {
+                         // 没本地结果 -> 全网搜
+                         performSearch();
                     }
+                    return;
                 }
-                return;
             }
 
             if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -490,34 +723,13 @@
                 return;
             }
 
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && document.activeElement !== searchInput) {
                 if (selectedCardIndex !== -1 && visibleCards[selectedCardIndex]) {
                     const link = visibleCards[selectedCardIndex].querySelector('a');
                     if (link) link.click();
                 }
             }
         });
-
-        // ================== 搜索逻辑 (含 URL 搜索) ==================
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value;
-            searchClear.style.display = val.length > 0 ? 'block' : 'none';
-            const k = val.toLowerCase();
-            // ✨ 核心逻辑：增加了对 item.url 的检索 ✨
-            render(resources.filter(i => 
-                i.title.toLowerCase().includes(k) || 
-                i.desc.toLowerCase().includes(k) || 
-                i.cat.includes(k) ||
-                i.url.toLowerCase().includes(k) 
-            ));
-        });
-
-        function clearSearch() {
-            searchInput.value = '';
-            searchClear.style.display = 'none';
-            render(resources);
-            searchInput.focus();
-        }
 
         const fab = document.getElementById('fabTop');
         window.addEventListener('scroll', () => {
